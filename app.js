@@ -300,7 +300,7 @@ function initApp(user) {
   const grainBlock = document.getElementById("grainBlock");
 
   subType.onchange = () => {
-    if (subType.value === "Зерно") {
+    if (subType.value === "Зерно" || subType.value === "Відходи") {
       grainBlock.innerHTML = `
         <select id="grainType">
           <option value="">-- Оберіть зерно --</option>
