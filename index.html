@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Облік ставка PRO 3.0</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="authScreen" class="centered">
+  <h2>🔐 Вхід</h2>
+  <input type="email" id="email" placeholder="Email">
+  <input type="password" id="password" placeholder="Пароль">
+  <button id="loginBtn">Увійти</button>
+  <button id="registerBtn">Реєстрація</button>
+</div>
+
+<div id="app" class="hidden">
+
+  <div class="topbar">
+    <button id="logoutBtn">Вийти</button>
+  </div>
+
+  <div class="tabs">
+    <button data-tab="sales">Продажі</button>
+    <button data-tab="expenses">Витрати</button>
+    <button data-tab="analytics">Аналітика</button>
+    <button data-tab="dashboard">Панель</button>
+  </div>
+
+  <section id="sales" class="tab"></section>
+  <section id="expenses" class="tab hidden"></section>
+  <section id="analytics" class="tab hidden"></section>
+  <section id="dashboard" class="tab hidden"></section>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDDroTHvtLRlgzsYvZzZ6ouabAj7gZ-9A0",
+  authDomain: "oblik-stavka.firebaseapp.com",
+  projectId: "oblik-stavka"
+};
+
+const app = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db = getFirestore(app);
+
+window.firebaseAuth = auth;
+window.firebaseDB = db;
+window.firebaseFns = {
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut
+};
+
+</script>
+
+<script type="module" src="app.js"></script>
+</body>
+</html>
