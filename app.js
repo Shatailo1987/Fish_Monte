@@ -2,7 +2,9 @@ import {
   collection,
   addDoc,
   onSnapshot,
-  getDocs
+  getDocs,
+  query,
+  where
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const auth = window.firebaseAuth;
@@ -53,8 +55,6 @@ function initApp(user) {
   const buyersRef = collection(db, "users", user.uid, "buyers");
   const expensesRef = collection(db, "users", user.uid, "expenses");
 
-  let weights = [];
-  let items = [];
   let buyersCache = [];
 
   app.innerHTML = `
@@ -69,13 +69,13 @@ function initApp(user) {
 
   const content = document.getElementById("content");
 
-  /* ===================== ПРОДАЖІ ===================== */
-
   async function loadBuyers() {
-    const snapshot = await getDocs(buyersRef);
+    const snap = await getDocs(buyersRef);
     buyersCache = [];
-    snapshot.forEach(doc => buyersCache.push(doc.data().name));
+    snap.forEach(doc => buyersCache.push(doc.data()));
   }
+
+  /* ================= ПРОДАЖІ ================= */
 
   async function renderSales() {
 
@@ -86,101 +86,73 @@ function initApp(user) {
 
       <select id="buyerSelect">
         <option value="">-- Обрати покупця --</option>
-        ${buyersCache.map(b => `<option>${b}</option>`).join("")}
+        ${buyersCache.map(b => `<option value="${b.phone}">
+          ${b.name} (${b.phone})
+        </option>`).join("")}
       </select>
 
-      <input id="newBuyer" placeholder="Новий покупець">
+      <h4>Новий покупець</h4>
+      <input id="newBuyerName" placeholder="Імʼя">
+      <input id="newBuyerPhone" placeholder="Телефон">
 
-      <select id="fishType">
-        <option>Короп</option>
-        <option>Амур</option>
-        <option>Товстолоб</option>
-        <option>Карась</option>
-        <option>Щука</option>
-        <option>Окунь</option>
-      </select>
-
-      <input id="weightInput" type="number" placeholder="Наважка">
-      <button id="addWeight">Додати</button>
-
-      <div id="weightsList"></div>
-      <div><b>Разом кг: <span id="totalKg">0</span></b></div>
-
-      <input id="priceInput" type="number" placeholder="Ціна за кг">
-      <button id="addFish">Додати рибу</button>
-
-      <div id="itemsList"></div>
-      <div><b>ЗАГАЛОМ: <span id="totalSum">0</span> грн</b></div>
-
+      <input id="saleAmount" type="number" placeholder="Сума">
       <button id="saveSale">Зберегти</button>
 
       <hr>
-      <h3>Історія продажів</h3>
+      <h3>Історія</h3>
       <div id="salesList"></div>
     `;
 
-    document.getElementById("addWeight").onclick = () => {
-      const w = Number(weightInput.value);
-      if (!w) return;
-      weights.push(w);
-      weightInput.value = "";
-      renderWeights();
-    };
-
-    function renderWeights() {
-      weightsList.innerHTML = weights.map(w => `<div>${w} кг</div>`).join("");
-      totalKg.innerText = weights.reduce((a,b)=>a+b,0);
-    }
-
-    document.getElementById("addFish").onclick = () => {
-      if (!weights.length) return;
-
-      const kg = weights.reduce((a,b)=>a+b,0);
-      const price = Number(priceInput.value);
-      const fish = fishType.value;
-
-      items.push({
-        fish,
-        kg,
-        price,
-        sum: kg * price
-      });
-
-      weights = [];
-      renderWeights();
-      renderItems();
-    };
-
-    function renderItems() {
-      itemsList.innerHTML = items.map(i =>
-        `<div>${i.fish} — ${i.kg} кг × ${i.price} = ${i.sum} грн</div>`
-      ).join("");
-
-      totalSum.innerText = items.reduce((a,b)=>a+b.sum,0);
-    }
-
     document.getElementById("saveSale").onclick = async () => {
 
-      const selectedBuyer = buyerSelect.value;
-      const newBuyer = newBuyerInput.value.trim();
-      const buyer = selectedBuyer || newBuyer;
+      const selectedPhone = buyerSelect.value;
+      const newName = newBuyerName.value.trim();
+      const newPhone = newBuyerPhone.value.trim();
+      const amount = Number(saleAmount.value);
 
-      if (!buyer || !items.length) return;
+      if (!amount) return;
 
-      if (!buyersCache.includes(buyer)) {
-        await addDoc(buyersRef, { name: buyer });
+      let buyerName = "";
+      let buyerPhone = "";
+
+      if (selectedPhone) {
+        const found = buyersCache.find(b => b.phone === selectedPhone);
+        buyerName = found.name;
+        buyerPhone = found.phone;
+      } else {
+
+        if (!newName || !newPhone) {
+          alert("Вкажіть імʼя і телефон");
+          return;
+        }
+
+        const existing = buyersCache.find(b => b.phone === newPhone);
+        if (existing) {
+          alert("Покупець з таким телефоном вже існує");
+          return;
+        }
+
+        await addDoc(buyersRef, {
+          name: newName,
+          phone: newPhone
+        });
+
+        buyerName = newName;
+        buyerPhone = newPhone;
       }
 
       await addDoc(salesRef, {
-        buyer,
-        items,
-        totalKg: items.reduce((a,b)=>a+b.kg,0),
-        totalSum: items.reduce((a,b)=>a+b.sum,0),
+        buyerName,
+        buyerPhone,
+        amount,
         date: new Date().toISOString()
       });
 
-      items = [];
-      renderItems();
+      newBuyerName.value = "";
+      newBuyerPhone.value = "";
+      saleAmount.value = "";
+
+      renderSales();
     };
 
     onSnapshot(salesRef, snap => {
@@ -188,73 +160,46 @@ function initApp(user) {
       snap.forEach(doc => {
         const d = doc.data();
         salesList.innerHTML += `
-          <div>${new Date(d.date).toLocaleDateString()} — ${d.buyer} — ${d.totalSum} грн</div>
+          <div>
+            ${new Date(d.date).toLocaleDateString()} — 
+            ${d.buyerName} (${d.buyerPhone}) — 
+            ${d.amount} грн
+          </div>
         `;
       });
     });
   }
 
-  /* ===================== ВИТРАТИ ===================== */
+  /* ================= ВИТРАТИ ================= */
 
   function renderExpenses() {
-
     content.innerHTML = `
       <h2>Витрати</h2>
-
-      <select id="expenseCategory">
-        <option>Корм</option>
-        <option>Зарибок</option>
-        <option>Пальне</option>
-        <option>Зарплата Рибаки</option>
-        <option>Ремонт</option>
-        <option>Інше</option>
-      </select>
-
-      <input id="expenseSum" type="number" placeholder="Сума (грн)">
-      <input id="expenseComment" placeholder="Коментар">
-
-      <button id="saveExpense">Зберегти витрату</button>
-
-      <hr>
-      <h3>Історія витрат</h3>
+      <input id="expenseSum" type="number" placeholder="Сума">
+      <button id="saveExpense">Зберегти</button>
       <div id="expensesList"></div>
-      <div><b>ЗАГАЛЬНІ ВИТРАТИ: <span id="totalExpenses">0</span> грн</b></div>
     `;
 
     document.getElementById("saveExpense").onclick = async () => {
-
-      const category = expenseCategory.value;
       const sum = Number(expenseSum.value);
-      const comment = expenseComment.value;
-
       if (!sum) return;
 
       await addDoc(expensesRef, {
-        category,
         sum,
-        comment,
         date: new Date().toISOString()
       });
 
       expenseSum.value = "";
-      expenseComment.value = "";
     };
 
     onSnapshot(expensesRef, snap => {
-
       expensesList.innerHTML = "";
-      let total = 0;
-
       snap.forEach(doc => {
         const d = doc.data();
-        total += d.sum;
-
         expensesList.innerHTML += `
-          <div>${new Date(d.date).toLocaleDateString()} — ${d.category} — ${d.sum} грн</div>
+          <div>${new Date(d.date).toLocaleDateString()} — ${d.sum} грн</div>
         `;
       });
-
-      totalExpenses.innerText = total;
     });
   }
 
