@@ -300,7 +300,42 @@ function initApp(user) {
         `;
       }
     };
+  document.getElementById("saveExpense").onclick = async () => {
 
+    const cat = document.getElementById("expenseCategory").value;
+    if (!cat) {
+      alert("Оберіть категорію");
+      return;
+    }
+
+    const sumInput = document.getElementById("sum");
+    const sum = Number(sumInput?.value);
+
+    if (!sum || sum <= 0) {
+      alert("Вкажіть суму");
+      return;
+    }
+
+    let data = {
+      category: cat,
+      sum: sum,
+      date: new Date().toISOString()
+    };
+
+    if (cat === "Корм") {
+      data.subType = document.getElementById("subType")?.value || "";
+      data.name = document.getElementById("name")?.value || "";
+      data.weight = Number(document.getElementById("weight")?.value) || 0;
+    }
+
+    if (cat === "Пальне" || cat === "Ремонт" || cat === "Інше") {
+      data.name = document.getElementById("name")?.value || "";
+    }
+
+    await addDoc(expensesRef, data);
+
+    renderExpenses();
+  };
 saveExpense.onclick = async () => {
 
   const cat = expenseCategory.value;
