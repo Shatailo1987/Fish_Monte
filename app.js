@@ -304,10 +304,22 @@ function initApp(user) {
 saveExpense.onclick = async () => {
 
   const cat = expenseCategory.value;
-  if (!cat) return;
+  if (!cat) {
+    alert("Оберіть категорію");
+    return;
+  }
+
+  const sumInput = document.getElementById("sum");
+  const sumValue = Number(sumInput?.value);
+
+  if (!sumValue || sumValue <= 0) {
+    alert("Вкажіть коректну суму");
+    return;
+  }
 
   let data = {
     category: cat,
+    sum: sumValue,
     date: new Date().toISOString()
   };
 
@@ -315,17 +327,10 @@ saveExpense.onclick = async () => {
     data.subType = document.getElementById("subType")?.value || "";
     data.name = document.getElementById("name")?.value || "";
     data.weight = Number(document.getElementById("weight")?.value) || 0;
-    data.sum = Number(document.getElementById("sum")?.value) || 0;
   }
 
   if (cat === "Пальне" || cat === "Ремонт" || cat === "Інше") {
     data.name = document.getElementById("name")?.value || "";
-    data.sum = Number(document.getElementById("sum")?.value) || 0;
-  }
-
-  if (!data.sum) {
-    alert("Вкажіть суму");
-    return;
   }
 
   await addDoc(expensesRef, data);
