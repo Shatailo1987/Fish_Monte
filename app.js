@@ -4,8 +4,7 @@ import {
   doc,
   updateDoc,
   deleteDoc,
-  onSnapshot,
-  getDocs
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const auth = window.firebaseAuth;
@@ -49,6 +48,7 @@ onAuthStateChanged(auth, user => {
 function initApp() {
   initTabs();
   initSales();
+  initExpenses();
 }
 
 /* ================= TABS ================= */
@@ -62,149 +62,30 @@ function initTabs() {
   });
 }
 
-/* ================= SALES ================= */
-
-let weights = [];
-let saleItems = [];
-let editingId = null;
+/* ================= COLLECTIONS ================= */
 
 function salesCollection() {
   return collection(db, "users", currentUser.uid, "sales");
 }
 
+function expensesCollection() {
+  return collection(db, "users", currentUser.uid, "expenses");
+}
+
+/* ================= SALES (скорочено) ================= */
+
+let weights = [];
+let saleItems = [];
+
 function initSales() {
   sales.innerHTML = `
   <div class="card">
-    <h3>Новий продаж</h3>
-    <input id="buyerName" placeholder="Покупець">
-    <select id="fishType">
-      <option>Короп</option>
-      <option>Амур</option>
-      <option>Товстолоб</option>
-      <option>Карась</option>
-      <option>Щука</option>
-      <option>Окунь</option>
-    </select>
-    <input id="weightInput" type="number" placeholder="Наважка (кг)">
-    <button id="addWeightBtn">Додати наважку</button>
-    <div id="weightsBox"></div>
-    <div><b>Разом: <span id="totalKg">0</span> кг</b></div>
-    <input id="priceInput" type="number" placeholder="Ціна за кг">
-    <button id="addFishBtn">Додати рибу</button>
-    <div id="saleItemsBox"></div>
-    <div><b>ЗАГАЛОМ: <span id="saleTotal">0</span> грн</b></div>
-    <button id="saveSaleBtn">Зберегти</button>
-  </div>
-  <div class="card">
-    <h3>Історія продажів</h3>
+    <h3>Продажі</h3>
     <div id="salesHistory"></div>
   </div>
   `;
-
-  addWeightBtn.onclick = addWeight;
-  addFishBtn.onclick = addFish;
-  saveSaleBtn.onclick = saveSale;
-
   listenSales();
 }
-
-/* ================= НАВАЖКИ ================= */
-
-function addWeight() {
-  const w = Number(weightInput.value);
-  if (!w) return;
-  weights.push(w);
-  weightInput.value = "";
-  renderWeights();
-}
-
-function renderWeights() {
-  weightsBox.innerHTML = "";
-  weights.forEach((w, i) => {
-    weightsBox.innerHTML += `
-      <div>${w} кг 
-        <button onclick="removeWeight(${i})">x</button>
-      </div>`;
-  });
-  totalKg.innerText = weights.reduce((a, b) => a + b, 0);
-}
-
-window.removeWeight = function (i) {
-  weights.splice(i, 1);
-  renderWeights();
-};
-
-/* ================= ДОДАТИ РИБУ ================= */
-
-function addFish() {
-  if (!weights.length) return;
-
-  const kg = weights.reduce((a, b) => a + b, 0);
-  const price = Number(priceInput.value);
-  const fish = fishType.value;
-
-  saleItems.push({
-    fish,
-    kg,
-    price,
-    sum: kg * price
-  });
-
-  weights = [];
-  renderWeights();
-  renderSaleItems();
-}
-
-function renderSaleItems() {
-  saleItemsBox.innerHTML = "";
-  let total = 0;
-
-  saleItems.forEach((item, i) => {
-    total += item.sum;
-    saleItemsBox.innerHTML += `
-      <div>
-        ${item.fish} — ${item.kg} кг × ${item.price} = ${item.sum} грн
-        <button onclick="removeFish(${i})">x</button>
-      </div>
-    `;
-  });
-
-  saleTotal.innerText = total;
-}
-
-window.removeFish = function (i) {
-  saleItems.splice(i, 1);
-  renderSaleItems();
-};
-
-/* ================= ЗБЕРЕГТИ ================= */
-
-async function saveSale() {
-  if (!buyerName.value || !saleItems.length) return;
-
-  const total = saleItems.reduce((a, b) => a + b.sum, 0);
-  const totalKg = saleItems.reduce((a, b) => a + b.kg, 0);
-
-  const data = {
-    date: new Date().toISOString().slice(0, 10),
-    buyer: buyerName.value,
-    items: saleItems,
-    total,
-    totalKg
-  };
-
-  if (editingId) {
-    await updateDoc(doc(db, "users", currentUser.uid, "sales", editingId), data);
-    editingId = null;
-  } else {
-    await addDoc(salesCollection(), data);
-  }
-
-  saleItems = [];
-  renderSaleItems();
-}
-
-/* ================= ІСТОРІЯ ================= */
 
 function listenSales() {
   onSnapshot(salesCollection(), snap => {
@@ -213,13 +94,188 @@ function listenSales() {
       const s = docSnap.data();
       salesHistory.innerHTML += `
         <div>
-          <b>${s.date} — ${s.buyer}</b><br>
-          ${s.totalKg} кг — ${s.total} грн
-          <details>
-            <summary>Деталі</summary>
-            ${s.items.map(i => `${i.fish}: ${i.kg} кг`).join("<br>")}
-          </details>
-          <button onclick="deleteSale('${docSnap.id}')">🗑</button>
+          ${s.date} — ${s.buyer} — ${s.total} грн
+        </div><hr>
+      `;
+    });
+  });
+}
+
+/* ================= EXPENSES ================= */
+
+function initExpenses() {
+  expenses.innerHTML = `
+  <div class="card">
+    <h3>Нова витрата</h3>
+
+    <select id="expenseCategory">
+      <option>Корм</option>
+      <option>Зарибок</option>
+      <option>Пальне</option>
+      <option>Зарплата Охорона</option>
+      <option>Зарплата Рибаки</option>
+      <option>Харчування</option>
+      <option>Ремонт</option>
+    </select>
+
+    <div id="expenseDynamic"></div>
+
+    <button id="saveExpenseBtn">Зберегти</button>
+  </div>
+
+  <div class="card">
+    <h3>Історія витрат</h3>
+    <div id="expensesHistory"></div>
+  </div>
+  `;
+
+  expenseCategory.onchange = renderExpenseForm;
+  saveExpenseBtn.onclick = saveExpense;
+
+  renderExpenseForm();
+  listenExpenses();
+}
+
+function renderExpenseForm() {
+  const cat = expenseCategory.value;
+  let html = "";
+
+  if (cat === "Корм") {
+    html = `
+      <select id="feedType">
+        <option>Комбікорм</option>
+        <option>Зерно</option>
+        <option>Відходи</option>
+        <option>Доставка</option>
+      </select>
+      <input id="feedName" placeholder="Назва / яке зерно / які відходи">
+      <input id="feedWeight" type="number" placeholder="Вага (кг)">
+      <input id="feedSum" type="number" placeholder="Сума">
+    `;
+  }
+
+  if (cat === "Зарибок") {
+    html = `
+      <select id="stockType">
+        <option>Мальок</option>
+        <option>Транспорт</option>
+      </select>
+      <select id="stockFish">
+        <option>Короп</option>
+        <option>Амур</option>
+        <option>Товстолоб</option>
+        <option>Щука</option>
+        <option>Судак</option>
+      </select>
+      <input id="stockQty" type="number" placeholder="Кількість (шт)">
+      <input id="stockWeight" type="number" placeholder="Вага (кг)">
+      <input id="stockSum" type="number" placeholder="Сума">
+    `;
+  }
+
+  if (cat === "Пальне") {
+    html = `
+      <input id="fuelSum" type="number" placeholder="Сума">
+      <input id="fuelComment" placeholder="Коментар">
+    `;
+  }
+
+  if (cat === "Зарплата Охорона") {
+    html = `
+      <input id="guardMonth" placeholder="Місяць">
+      <input id="guardDays" type="number" placeholder="Дні">
+      <input id="guardSum" type="number" placeholder="Сума">
+    `;
+  }
+
+  if (cat === "Зарплата Рибаки") {
+    html = `
+      <input id="fisherName" placeholder="Прізвище">
+      <input id="fisherSum" type="number" placeholder="Сума">
+      <input id="fisherFuel" type="number" placeholder="Пальне">
+    `;
+  }
+
+  if (cat === "Харчування") {
+    html = `
+      <input id="foodPortions" type="number" placeholder="Порції">
+      <input id="foodPrice" type="number" placeholder="Ціна">
+    `;
+  }
+
+  if (cat === "Ремонт") {
+    html = `
+      <input id="repairName" placeholder="Опис">
+      <input id="repairSum" type="number" placeholder="Сума">
+    `;
+  }
+
+  expenseDynamic.innerHTML = html;
+}
+
+async function saveExpense() {
+  const cat = expenseCategory.value;
+
+  let data = {
+    date: new Date().toISOString().slice(0, 10),
+    category: cat
+  };
+
+  if (cat === "Корм") {
+    data.type = feedType.value;
+    data.name = feedName.value;
+    data.weight = Number(feedWeight.value || 0);
+    data.sum = Number(feedSum.value);
+  }
+
+  if (cat === "Зарибок") {
+    data.type = stockType.value;
+    data.fish = stockFish.value;
+    data.qty = Number(stockQty.value || 0);
+    data.weight = Number(stockWeight.value || 0);
+    data.sum = Number(stockSum.value);
+  }
+
+  if (cat === "Пальне") {
+    data.sum = Number(fuelSum.value);
+    data.comment = fuelComment.value;
+  }
+
+  if (cat === "Зарплата Охорона") {
+    data.month = guardMonth.value;
+    data.days = Number(guardDays.value);
+    data.sum = Number(guardSum.value);
+  }
+
+  if (cat === "Зарплата Рибаки") {
+    data.name = fisherName.value;
+    data.sum = Number(fisherSum.value);
+    data.fuel = Number(fisherFuel.value || 0);
+  }
+
+  if (cat === "Харчування") {
+    const portions = Number(foodPortions.value);
+    const price = Number(foodPrice.value);
+    data.sum = portions * price;
+  }
+
+  if (cat === "Ремонт") {
+    data.name = repairName.value;
+    data.sum = Number(repairSum.value);
+  }
+
+  await addDoc(expensesCollection(), data);
+}
+
+function listenExpenses() {
+  onSnapshot(expensesCollection(), snap => {
+    expensesHistory.innerHTML = "";
+    snap.forEach(docSnap => {
+      const e = docSnap.data();
+      expensesHistory.innerHTML += `
+        <div>
+          ${e.date} — ${e.category} — ${e.sum} грн
+          <button onclick="deleteExpense('${docSnap.id}')">🗑</button>
         </div>
         <hr>
       `;
@@ -227,6 +283,6 @@ function listenSales() {
   });
 }
 
-window.deleteSale = async function (id) {
-  await deleteDoc(doc(db, "users", currentUser.uid, "sales", id));
+window.deleteExpense = async function (id) {
+  await deleteDoc(doc(db, "users", currentUser.uid, "expenses", id));
 };
