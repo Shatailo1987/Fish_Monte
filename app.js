@@ -327,6 +327,43 @@ function initApp(user) {
         `;
       }
     };
+
+    if (cat === "Зарибок") {
+  dynamicFields.innerHTML = `
+    <select id="fishType">
+      <option value="">-- Вид риби --</option>
+      <option>Короп</option>
+      <option>Товстолоб</option>
+      <option>Білий амур</option>
+      <option>Карась</option>
+      <option>Щука</option>
+      <option>Судак</option>
+    </select>
+
+    <input id="quantity" type="number" placeholder="Кількість (шт)">
+    <input id="avgWeight" type="number" placeholder="Середня вага (г)">
+    <input id="pricePerKg" type="number" placeholder="Ціна за кг">
+    <input id="sum" type="number" placeholder="Сума" readonly>
+  `;
+
+  const quantity = document.getElementById("quantity");
+  const avgWeight = document.getElementById("avgWeight");
+  const pricePerKg = document.getElementById("pricePerKg");
+  const sumInput = document.getElementById("sum");
+
+  function calculateSum() {
+    const qty = Number(quantity.value) || 0;
+    const weight = Number(avgWeight.value) || 0;
+    const price = Number(pricePerKg.value) || 0;
+
+    const totalKg = (qty * weight) / 1000;
+    sumInput.value = Math.round(totalKg * price);
+  }
+
+  quantity.oninput = calculateSum;
+  avgWeight.oninput = calculateSum;
+  pricePerKg.oninput = calculateSum;
+}
   document.getElementById("saveExpense").onclick = async () => {
 
     const cat = document.getElementById("expenseCategory").value;
