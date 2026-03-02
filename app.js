@@ -279,19 +279,46 @@ function initApp(user) {
       const cat = expenseCategory.value;
       dynamicFields.innerHTML = "";
 
-      if (cat === "Корм") {
-        dynamicFields.innerHTML = `
-          <select id="subType">
-            <option>Комбікорм</option>
-            <option>Зерно</option>
-            <option>Доставка</option>
-            <option>Відходи</option>
-          </select>
-          <input id="name" placeholder="Назва">
-          <input id="weight" type="number" placeholder="Вага (кг)">
-          <input id="sum" type="number" placeholder="Сума">
-        `;
-      }
+     if (cat === "Корм") {
+  dynamicFields.innerHTML = `
+    <select id="subType">
+      <option value="">-- Тип корму --</option>
+      <option>Комбікорм</option>
+      <option>Зерно</option>
+      <option>Відходи</option>
+      <option>Доставка</option>
+    </select>
+
+    <div id="grainBlock"></div>
+
+    <input id="name" placeholder="Назва">
+    <input id="weight" type="number" placeholder="Вага (кг)">
+    <input id="sum" type="number" placeholder="Сума">
+  `;
+
+  const subType = document.getElementById("subType");
+  const grainBlock = document.getElementById("grainBlock");
+
+  subType.onchange = () => {
+    if (subType.value === "Зерно") {
+      grainBlock.innerHTML = `
+        <select id="grainType">
+          <option value="">-- Оберіть зерно --</option>
+          <option>Ячмінь</option>
+          <option>Пшениця</option>
+          <option>Кукурудза</option>
+          <option>Соняшник</option>
+          <option>Сорго</option>
+          <option>Гречка</option>
+          <option>Горох</option>
+          <option>Пшоно</option>
+        </select>
+      `;
+    } else {
+      grainBlock.innerHTML = "";
+    }
+  };
+}
 
       if (cat === "Пальне" || cat === "Ремонт" || cat === "Інше") {
         dynamicFields.innerHTML = `
