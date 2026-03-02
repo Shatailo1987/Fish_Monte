@@ -374,7 +374,8 @@ function initApp(user) {
 
     const sumInput = document.getElementById("sum");
     const sum = Number(sumInput?.value);
-
+const sum = Number(document.getElementById("sum")?.value) || 0;
+    
     if (!sum || sum <= 0) {
       alert("Вкажіть суму");
       return;
