@@ -328,7 +328,7 @@ function initApp(user) {
       }
     };
 
-    if (cat === "Зарибок") {
+  if (cat === "Зарибок") {
   dynamicFields.innerHTML = `
     <select id="fishType">
       <option value="">-- Вид риби --</option>
@@ -363,6 +363,7 @@ function initApp(user) {
   quantity.oninput = calculateSum;
   avgWeight.oninput = calculateSum;
   pricePerKg.oninput = calculateSum;
+}
 }
   document.getElementById("saveExpense").onclick = async () => {
 
