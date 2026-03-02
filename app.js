@@ -4,10 +4,7 @@ import {
   doc,
   updateDoc,
   deleteDoc,
-  onSnapshot,
-  getDocs,
-  query,
-  where
+  onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const auth = window.firebaseAuth;
@@ -20,7 +17,6 @@ const {
 } = window.firebaseFns;
 
 let currentUser = null;
-let buyersCache = [];
 
 /* ================= AUTH ================= */
 
@@ -48,20 +44,19 @@ onAuthStateChanged(auth, user => {
 
 /* ================= COLLECTIONS ================= */
 
-function salesCol() {
-  return collection(db, "users", currentUser.uid, "sales");
-}
-
-function buyersCol() {
-  return collection(db, "users", currentUser.uid, "buyers");
-}
+const salesCol = () => collection(db, "users", currentUser.uid, "sales");
+const buyersCol = () => collection(db, "users", currentUser.uid, "buyers");
+const expensesCol = () => collection(db, "users", currentUser.uid, "expenses");
+const fishersCol = () => collection(db, "users", currentUser.uid, "fishers");
 
 /* ================= INIT ================= */
 
 function initApp() {
   initTabs();
   initSales();
+  initExpenses();
   listenBuyers();
+  listenFishers();
 }
 
 /* ================= TABS ================= */
@@ -77,12 +72,12 @@ function initTabs() {
 
 /* ================= BUYERS ================= */
 
+let buyersCache = [];
+
 function listenBuyers() {
   onSnapshot(buyersCol(), snap => {
     buyersCache = [];
-    snap.forEach(docSnap => {
-      buyersCache.push({ id: docSnap.id, ...docSnap.data() });
-    });
+    snap.forEach(d => buyersCache.push({ id: d.id, ...d.data() }));
     renderBuyerSelect();
   });
 }
@@ -90,7 +85,6 @@ function listenBuyers() {
 function renderBuyerSelect() {
   const select = document.getElementById("buyerSelect");
   if (!select) return;
-
   select.innerHTML = `<option value="">-- Обрати покупця --</option>`;
   buyersCache.forEach(b => {
     select.innerHTML += `<option value="${b.name}">${b.name}</option>`;
@@ -98,11 +92,35 @@ function renderBuyerSelect() {
 }
 
 async function addBuyerIfNotExists(name) {
-  if (!name) return;
-
-  const exists = buyersCache.find(b => b.name === name);
-  if (!exists) {
+  if (!buyersCache.find(b => b.name === name)) {
     await addDoc(buyersCol(), { name });
+  }
+}
+
+/* ================= FISHERS ================= */
+
+let fishersCache = [];
+
+function listenFishers() {
+  onSnapshot(fishersCol(), snap => {
+    fishersCache = [];
+    snap.forEach(d => fishersCache.push({ id: d.id, ...d.data() }));
+    renderFisherSelect();
+  });
+}
+
+function renderFisherSelect() {
+  const select = document.getElementById("fisherSelect");
+  if (!select) return;
+  select.innerHTML = `<option value="">-- Обрати рибака --</option>`;
+  fishersCache.forEach(f => {
+    select.innerHTML += `<option value="${f.name}">${f.name}</option>`;
+  });
+}
+
+async function addFisherIfNotExists(name) {
+  if (!fishersCache.find(f => f.name === name)) {
+    await addDoc(fishersCol(), { name });
   }
 }
 
@@ -114,10 +132,10 @@ let saleItems = [];
 function initSales() {
   sales.innerHTML = `
   <div class="card">
-    <h3>Новий продаж</h3>
+    <h3>Продаж</h3>
 
     <select id="buyerSelect"></select>
-    <input id="buyerInput" placeholder="Або вписати нового">
+    <input id="buyerInput" placeholder="Новий покупець">
 
     <select id="fishType">
       <option>Короп</option>
@@ -128,13 +146,13 @@ function initSales() {
       <option>Окунь</option>
     </select>
 
-    <input id="weightInput" type="number" placeholder="Наважка (кг)">
-    <button id="addWeightBtn">Додати наважку</button>
+    <input id="weightInput" type="number" placeholder="Наважка">
+    <button id="addWeightBtn">Додати</button>
 
     <div id="weightsBox"></div>
-    <div><b>Разом: <span id="totalKg">0</span> кг</b></div>
+    <div><b>Разом кг: <span id="totalKg">0</span></b></div>
 
-    <input id="priceInput" type="number" placeholder="Ціна за кг">
+    <input id="priceInput" type="number" placeholder="Ціна">
     <button id="addFishBtn">Додати рибу</button>
 
     <div id="saleItemsBox"></div>
@@ -151,8 +169,6 @@ function initSales() {
   renderBuyerSelect();
 }
 
-/* ================= НАВАЖКИ ================= */
-
 function addWeight() {
   const w = Number(weightInput.value);
   if (!w) return;
@@ -165,29 +181,24 @@ function renderWeights() {
   weightsBox.innerHTML = "";
   weights.forEach((w, i) => {
     weightsBox.innerHTML += `
-      <div>${w} кг 
-        <button onclick="removeWeight(${i})">x</button>
-      </div>`;
+      <div>${w} кг <button onclick="removeWeight(${i})">x</button></div>`;
   });
   totalKg.innerText = weights.reduce((a, b) => a + b, 0);
 }
 
-window.removeWeight = function (i) {
+window.removeWeight = i => {
   weights.splice(i, 1);
   renderWeights();
 };
-
-/* ================= ДОДАТИ РИБУ ================= */
 
 function addFish() {
   if (!weights.length) return;
 
   const kg = weights.reduce((a, b) => a + b, 0);
   const price = Number(priceInput.value);
-  const fish = fishType.value;
 
   saleItems.push({
-    fish,
+    fish: fishType.value,
     kg,
     price,
     sum: kg * price
@@ -201,42 +212,34 @@ function addFish() {
 function renderSaleItems() {
   saleItemsBox.innerHTML = "";
   let total = 0;
-
   saleItems.forEach((item, i) => {
     total += item.sum;
     saleItemsBox.innerHTML += `
       <div>
-        ${item.fish} — ${item.kg} кг × ${item.price} = ${item.sum} грн
+        ${item.fish} — ${item.kg} кг × ${item.price}
         <button onclick="removeFish(${i})">x</button>
-      </div>
-    `;
+      </div>`;
   });
-
   saleTotal.innerText = total;
 }
 
-window.removeFish = function (i) {
+window.removeFish = i => {
   saleItems.splice(i, 1);
   renderSaleItems();
 };
 
-/* ================= ЗБЕРЕГТИ ПРОДАЖ ================= */
-
 async function saveSale() {
-  const selectedBuyer = buyerSelect.value;
-  const newBuyer = buyerInput.value.trim();
-  const buyerName = selectedBuyer || newBuyer;
+  const buyer = buyerSelect.value || buyerInput.value.trim();
+  if (!buyer || !saleItems.length) return;
 
-  if (!buyerName || !saleItems.length) return;
-
-  await addBuyerIfNotExists(buyerName);
+  await addBuyerIfNotExists(buyer);
 
   const total = saleItems.reduce((a, b) => a + b.sum, 0);
   const totalKg = saleItems.reduce((a, b) => a + b.kg, 0);
 
   await addDoc(salesCol(), {
     date: new Date().toISOString().slice(0, 10),
-    buyer: buyerName,
+    buyer,
     items: saleItems,
     total,
     totalKg
@@ -245,3 +248,64 @@ async function saveSale() {
   saleItems = [];
   renderSaleItems();
 }
+
+/* ================= EXPENSES ================= */
+
+function initExpenses() {
+  expenses.innerHTML = `
+  <div class="card">
+    <h3>Зарплата Рибаки</h3>
+
+    <select id="fisherSelect"></select>
+    <input id="fisherInput" placeholder="Новий рибак">
+    <input id="fisherSum" type="number" placeholder="Зарплата">
+    <input id="fisherFuel" type="number" placeholder="Пальне">
+
+    <button id="saveFisherSalaryBtn">Зберегти</button>
+  </div>
+
+  <div class="card">
+    <h3>Історія зарплат</h3>
+    <div id="expensesHistory"></div>
+  </div>
+  `;
+
+  saveFisherSalaryBtn.onclick = saveFisherSalary;
+  renderFisherSelect();
+  listenFisherSalaries();
+}
+
+async function saveFisherSalary() {
+  const name = fisherSelect.value || fisherInput.value.trim();
+  if (!name) return;
+
+  await addFisherIfNotExists(name);
+
+  await addDoc(expensesCol(), {
+    date: new Date().toISOString().slice(0, 10),
+    category: "Зарплата Рибаки",
+    name,
+    sum: Number(fisherSum.value),
+    fuel: Number(fisherFuel.value || 0)
+  });
+}
+
+function listenFisherSalaries() {
+  onSnapshot(expensesCol(), snap => {
+    expensesHistory.innerHTML = "";
+    snap.forEach(d => {
+      const e = d.data();
+      if (e.category === "Зарплата Рибаки") {
+        expensesHistory.innerHTML += `
+          <div>
+            ${e.date} — ${e.name} — ${e.sum} грн
+            <button onclick="deleteExpense('${d.id}')">🗑</button>
+          </div><hr>`;
+      }
+    });
+  });
+}
+
+window.deleteExpense = async id => {
+  await deleteDoc(doc(db, "users", currentUser.uid, "expenses", id));
+};
