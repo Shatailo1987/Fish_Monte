@@ -1,7 +1,8 @@
 import {
   collection,
   addDoc,
-  onSnapshot
+  onSnapshot,
+  getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const auth = window.firebaseAuth;
@@ -50,11 +51,19 @@ function initSales(user) {
 
   let weights = [];
   let items = [];
+  let buyersCache = [];
+
+  const salesRef = collection(db, "users", user.uid, "sales");
+  const buyersRef = collection(db, "users", user.uid, "buyers");
 
   app.innerHTML = `
     <h2>Продаж</h2>
 
-    <input id="buyerName" placeholder="Покупець">
+    <select id="buyerSelect">
+      <option value="">-- Обрати покупця --</option>
+    </select>
+
+    <input id="newBuyer" placeholder="Або новий покупець">
 
     <select id="fishType">
       <option>Короп</option>
@@ -89,7 +98,31 @@ function initSales(user) {
 
   document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
-  const salesRef = collection(db, "users", user.uid, "sales");
+  /* ===== BUYERS ===== */
+
+  const loadBuyers = async () => {
+    const snapshot = await getDocs(buyersRef);
+    buyersCache = [];
+    const select = document.getElementById("buyerSelect");
+    select.innerHTML = `<option value="">-- Обрати покупця --</option>`;
+
+    snapshot.forEach(doc => {
+      const name = doc.data().name;
+      buyersCache.push(name);
+      select.innerHTML += `<option value="${name}">${name}</option>`;
+    });
+  };
+
+  const addBuyerIfNotExists = async (name) => {
+    if (!buyersCache.includes(name)) {
+      await addDoc(buyersRef, { name });
+      buyersCache.push(name);
+    }
+  };
+
+  loadBuyers();
+
+  /* ===== НАВАЖКИ ===== */
 
   const renderWeights = () => {
     const list = document.getElementById("weightsList");
@@ -98,18 +131,10 @@ function initSales(user) {
 
     weights.forEach((w, i) => {
       total += w;
-      list.innerHTML += `
-        <div>${w} кг 
-          <button onclick="removeWeight(${i})">x</button>
-        </div>`;
+      list.innerHTML += `<div>${w} кг</div>`;
     });
 
     document.getElementById("totalKg").innerText = total;
-  };
-
-  window.removeWeight = (i) => {
-    weights.splice(i, 1);
-    renderWeights();
   };
 
   document.getElementById("addWeight").onclick = () => {
@@ -120,12 +145,14 @@ function initSales(user) {
     renderWeights();
   };
 
+  /* ===== ПОЗИЦІЇ ===== */
+
   const renderItems = () => {
     const list = document.getElementById("itemsList");
     list.innerHTML = "";
     let total = 0;
 
-    items.forEach((item, i) => {
+    items.forEach(item => {
       total += item.sum;
       list.innerHTML += `
         <div>
@@ -155,9 +182,17 @@ function initSales(user) {
     renderItems();
   };
 
+  /* ===== ЗБЕРЕГТИ ===== */
+
   document.getElementById("saveSale").onclick = async () => {
-    const buyer = document.getElementById("buyerName").value;
+
+    const selectedBuyer = document.getElementById("buyerSelect").value;
+    const newBuyer = document.getElementById("newBuyer").value.trim();
+    const buyer = selectedBuyer || newBuyer;
+
     if (!buyer || !items.length) return;
+
+    await addBuyerIfNotExists(buyer);
 
     const totalKg = items.reduce((a, b) => a + b.kg, 0);
     const totalSum = items.reduce((a, b) => a + b.sum, 0);
@@ -172,8 +207,11 @@ function initSales(user) {
 
     items = [];
     renderItems();
-    document.getElementById("buyerName").value = "";
+    document.getElementById("newBuyer").value = "";
+    document.getElementById("buyerSelect").value = "";
   };
+
+  /* ===== ІСТОРІЯ ===== */
 
   onSnapshot(salesRef, snapshot => {
     const list = document.getElementById("salesList");
