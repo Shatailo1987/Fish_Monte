@@ -3,45 +3,33 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Облік ставка PRO 3.0</title>
+  <title>Fish Monte PRO</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<div id="authScreen" class="centered">
-  <h2>🔐 Вхід</h2>
+<div id="authScreen">
+  <h2>Вхід</h2>
   <input type="email" id="email" placeholder="Email">
   <input type="password" id="password" placeholder="Пароль">
   <button id="loginBtn">Увійти</button>
   <button id="registerBtn">Реєстрація</button>
+  <p id="authError" style="color:red;"></p>
 </div>
 
-<div id="app" class="hidden">
-
-  <div class="topbar">
-    <button id="logoutBtn">Вийти</button>
-  </div>
-
-  <div class="tabs">
-    <button data-tab="sales">Продажі</button>
-    <button data-tab="expenses">Витрати</button>
-    <button data-tab="analytics">Аналітика</button>
-    <button data-tab="dashboard">Панель</button>
-  </div>
-
-  <section id="sales" class="tab"></section>
-  <section id="expenses" class="tab hidden"></section>
-  <section id="analytics" class="tab hidden"></section>
-  <section id="dashboard" class="tab hidden"></section>
-
+<div id="app" style="display:none;">
+  <h2>Система запущена ✅</h2>
+  <button id="logoutBtn">Вийти</button>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<!-- Firebase SDK -->
+<script type="module">
 
-<script type="module" src="./app.js"></script>
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+import { getFirestore } 
+from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyDDroTHvtLRlgzsYvZzZ6ouabAj7gZ-9A0",
@@ -64,6 +52,7 @@ window.firebaseFns = {
 
 </script>
 
-<script type="module" src="app.js"></script>
+<script type="module" src="./app.js"></script>
+
 </body>
 </html>
