@@ -40,192 +40,226 @@ onAuthStateChanged(auth, user => {
   if (user) {
     authScreen.style.display = "none";
     app.style.display = "block";
-    initSales(user);
+    initApp(user);
   } else {
     authScreen.style.display = "block";
     app.style.display = "none";
   }
 });
 
-function initSales(user) {
+function initApp(user) {
+
+  const salesRef = collection(db, "users", user.uid, "sales");
+  const buyersRef = collection(db, "users", user.uid, "buyers");
+  const expensesRef = collection(db, "users", user.uid, "expenses");
 
   let weights = [];
   let items = [];
   let buyersCache = [];
 
-  const salesRef = collection(db, "users", user.uid, "sales");
-  const buyersRef = collection(db, "users", user.uid, "buyers");
-
   app.innerHTML = `
-    <h2>Продаж</h2>
-
-    <select id="buyerSelect">
-      <option value="">-- Обрати покупця --</option>
-    </select>
-
-    <input id="newBuyer" placeholder="Або новий покупець">
-
-    <select id="fishType">
-      <option>Короп</option>
-      <option>Амур</option>
-      <option>Товстолоб</option>
-      <option>Карась</option>
-      <option>Щука</option>
-      <option>Окунь</option>
-    </select>
-
-    <input id="weightInput" type="number" placeholder="Наважка (кг)">
-    <button id="addWeight">Додати наважку</button>
-
-    <div id="weightsList"></div>
-    <div><b>Разом кг: <span id="totalKg">0</span></b></div>
-
-    <input id="priceInput" type="number" placeholder="Ціна за кг">
-    <button id="addFish">Додати рибу</button>
-
-    <h3>Позиції</h3>
-    <div id="itemsList"></div>
-    <div><b>ЗАГАЛОМ: <span id="totalSum">0</span> грн</b></div>
-
-    <button id="saveSale">Зберегти продаж</button>
-
-    <hr>
-    <h3>Історія</h3>
-    <div id="salesList"></div>
-
+    <button id="tabSales">Продажі</button>
+    <button id="tabExpenses">Витрати</button>
     <button id="logoutBtn">Вийти</button>
+    <hr>
+    <div id="content"></div>
   `;
 
   document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
-  /* ===== BUYERS ===== */
+  const content = document.getElementById("content");
 
-  const loadBuyers = async () => {
+  /* ===================== ПРОДАЖІ ===================== */
+
+  async function loadBuyers() {
     const snapshot = await getDocs(buyersRef);
     buyersCache = [];
-    const select = document.getElementById("buyerSelect");
-    select.innerHTML = `<option value="">-- Обрати покупця --</option>`;
+    snapshot.forEach(doc => buyersCache.push(doc.data().name));
+  }
 
-    snapshot.forEach(doc => {
-      const name = doc.data().name;
-      buyersCache.push(name);
-      select.innerHTML += `<option value="${name}">${name}</option>`;
-    });
-  };
+  async function renderSales() {
 
-  const addBuyerIfNotExists = async (name) => {
-    if (!buyersCache.includes(name)) {
-      await addDoc(buyersRef, { name });
-      buyersCache.push(name);
+    await loadBuyers();
+
+    content.innerHTML = `
+      <h2>Продаж</h2>
+
+      <select id="buyerSelect">
+        <option value="">-- Обрати покупця --</option>
+        ${buyersCache.map(b => `<option>${b}</option>`).join("")}
+      </select>
+
+      <input id="newBuyer" placeholder="Новий покупець">
+
+      <select id="fishType">
+        <option>Короп</option>
+        <option>Амур</option>
+        <option>Товстолоб</option>
+        <option>Карась</option>
+        <option>Щука</option>
+        <option>Окунь</option>
+      </select>
+
+      <input id="weightInput" type="number" placeholder="Наважка">
+      <button id="addWeight">Додати</button>
+
+      <div id="weightsList"></div>
+      <div><b>Разом кг: <span id="totalKg">0</span></b></div>
+
+      <input id="priceInput" type="number" placeholder="Ціна за кг">
+      <button id="addFish">Додати рибу</button>
+
+      <div id="itemsList"></div>
+      <div><b>ЗАГАЛОМ: <span id="totalSum">0</span> грн</b></div>
+
+      <button id="saveSale">Зберегти</button>
+
+      <hr>
+      <h3>Історія продажів</h3>
+      <div id="salesList"></div>
+    `;
+
+    document.getElementById("addWeight").onclick = () => {
+      const w = Number(weightInput.value);
+      if (!w) return;
+      weights.push(w);
+      weightInput.value = "";
+      renderWeights();
+    };
+
+    function renderWeights() {
+      weightsList.innerHTML = weights.map(w => `<div>${w} кг</div>`).join("");
+      totalKg.innerText = weights.reduce((a,b)=>a+b,0);
     }
-  };
 
-  loadBuyers();
+    document.getElementById("addFish").onclick = () => {
+      if (!weights.length) return;
 
-  /* ===== НАВАЖКИ ===== */
+      const kg = weights.reduce((a,b)=>a+b,0);
+      const price = Number(priceInput.value);
+      const fish = fishType.value;
 
-  const renderWeights = () => {
-    const list = document.getElementById("weightsList");
-    list.innerHTML = "";
-    let total = 0;
+      items.push({
+        fish,
+        kg,
+        price,
+        sum: kg * price
+      });
 
-    weights.forEach((w, i) => {
-      total += w;
-      list.innerHTML += `<div>${w} кг</div>`;
+      weights = [];
+      renderWeights();
+      renderItems();
+    };
+
+    function renderItems() {
+      itemsList.innerHTML = items.map(i =>
+        `<div>${i.fish} — ${i.kg} кг × ${i.price} = ${i.sum} грн</div>`
+      ).join("");
+
+      totalSum.innerText = items.reduce((a,b)=>a+b.sum,0);
+    }
+
+    document.getElementById("saveSale").onclick = async () => {
+
+      const selectedBuyer = buyerSelect.value;
+      const newBuyer = newBuyerInput.value.trim();
+      const buyer = selectedBuyer || newBuyer;
+
+      if (!buyer || !items.length) return;
+
+      if (!buyersCache.includes(buyer)) {
+        await addDoc(buyersRef, { name: buyer });
+      }
+
+      await addDoc(salesRef, {
+        buyer,
+        items,
+        totalKg: items.reduce((a,b)=>a+b.kg,0),
+        totalSum: items.reduce((a,b)=>a+b.sum,0),
+        date: new Date().toISOString()
+      });
+
+      items = [];
+      renderItems();
+    };
+
+    onSnapshot(salesRef, snap => {
+      salesList.innerHTML = "";
+      snap.forEach(doc => {
+        const d = doc.data();
+        salesList.innerHTML += `
+          <div>${new Date(d.date).toLocaleDateString()} — ${d.buyer} — ${d.totalSum} грн</div>
+        `;
+      });
     });
+  }
 
-    document.getElementById("totalKg").innerText = total;
-  };
+  /* ===================== ВИТРАТИ ===================== */
 
-  document.getElementById("addWeight").onclick = () => {
-    const w = Number(document.getElementById("weightInput").value);
-    if (!w) return;
-    weights.push(w);
-    document.getElementById("weightInput").value = "";
-    renderWeights();
-  };
+  function renderExpenses() {
 
-  /* ===== ПОЗИЦІЇ ===== */
+    content.innerHTML = `
+      <h2>Витрати</h2>
 
-  const renderItems = () => {
-    const list = document.getElementById("itemsList");
-    list.innerHTML = "";
-    let total = 0;
+      <select id="expenseCategory">
+        <option>Корм</option>
+        <option>Зарибок</option>
+        <option>Пальне</option>
+        <option>Зарплата Рибаки</option>
+        <option>Ремонт</option>
+        <option>Інше</option>
+      </select>
 
-    items.forEach(item => {
-      total += item.sum;
-      list.innerHTML += `
-        <div>
-          ${item.fish} — ${item.kg} кг × ${item.price} = ${item.sum} грн
-        </div>`;
+      <input id="expenseSum" type="number" placeholder="Сума (грн)">
+      <input id="expenseComment" placeholder="Коментар">
+
+      <button id="saveExpense">Зберегти витрату</button>
+
+      <hr>
+      <h3>Історія витрат</h3>
+      <div id="expensesList"></div>
+      <div><b>ЗАГАЛЬНІ ВИТРАТИ: <span id="totalExpenses">0</span> грн</b></div>
+    `;
+
+    document.getElementById("saveExpense").onclick = async () => {
+
+      const category = expenseCategory.value;
+      const sum = Number(expenseSum.value);
+      const comment = expenseComment.value;
+
+      if (!sum) return;
+
+      await addDoc(expensesRef, {
+        category,
+        sum,
+        comment,
+        date: new Date().toISOString()
+      });
+
+      expenseSum.value = "";
+      expenseComment.value = "";
+    };
+
+    onSnapshot(expensesRef, snap => {
+
+      expensesList.innerHTML = "";
+      let total = 0;
+
+      snap.forEach(doc => {
+        const d = doc.data();
+        total += d.sum;
+
+        expensesList.innerHTML += `
+          <div>${new Date(d.date).toLocaleDateString()} — ${d.category} — ${d.sum} грн</div>
+        `;
+      });
+
+      totalExpenses.innerText = total;
     });
+  }
 
-    document.getElementById("totalSum").innerText = total;
-  };
+  document.getElementById("tabSales").onclick = renderSales;
+  document.getElementById("tabExpenses").onclick = renderExpenses;
 
-  document.getElementById("addFish").onclick = () => {
-    if (!weights.length) return;
-
-    const kg = weights.reduce((a, b) => a + b, 0);
-    const price = Number(document.getElementById("priceInput").value);
-    const fish = document.getElementById("fishType").value;
-
-    items.push({
-      fish,
-      kg,
-      price,
-      sum: kg * price
-    });
-
-    weights = [];
-    renderWeights();
-    renderItems();
-  };
-
-  /* ===== ЗБЕРЕГТИ ===== */
-
-  document.getElementById("saveSale").onclick = async () => {
-
-    const selectedBuyer = document.getElementById("buyerSelect").value;
-    const newBuyer = document.getElementById("newBuyer").value.trim();
-    const buyer = selectedBuyer || newBuyer;
-
-    if (!buyer || !items.length) return;
-
-    await addBuyerIfNotExists(buyer);
-
-    const totalKg = items.reduce((a, b) => a + b.kg, 0);
-    const totalSum = items.reduce((a, b) => a + b.sum, 0);
-
-    await addDoc(salesRef, {
-      buyer,
-      items,
-      totalKg,
-      totalSum,
-      date: new Date().toISOString()
-    });
-
-    items = [];
-    renderItems();
-    document.getElementById("newBuyer").value = "";
-    document.getElementById("buyerSelect").value = "";
-  };
-
-  /* ===== ІСТОРІЯ ===== */
-
-  onSnapshot(salesRef, snapshot => {
-    const list = document.getElementById("salesList");
-    list.innerHTML = "";
-
-    snapshot.forEach(doc => {
-      const data = doc.data();
-      const date = new Date(data.date).toLocaleDateString();
-
-      list.innerHTML += `
-        <div>
-          ${date} — ${data.buyer} — ${data.totalKg} кг — ${data.totalSum} грн
-        </div>
-      `;
-    });
-  });
+  renderSales();
 }
