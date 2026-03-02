@@ -1,0 +1,8 @@
+body { font-family: Arial; background:#f2f2f7; padding:15px }
+.hidden{display:none}
+.centered{max-width:400px;margin:100px auto;text-align:center}
+input,button{width:100%;padding:10px;margin-top:8px}
+button{background:#007aff;color:white;border:none;border-radius:8px}
+.tabs button{width:auto;margin:4px;padding:6px 12px}
+.card{background:white;padding:15px;border-radius:12px;margin-bottom:15px}
+.topbar{text-align:right;margin-bottom:10px}
