@@ -2,6 +2,7 @@ import {
   collection,
   addDoc,
   doc,
+  updateDoc,
   deleteDoc,
   onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
@@ -16,6 +17,8 @@ const {
 } = window.firebaseFns;
 
 let currentUser = null;
+let editingExpenseId = null;
+let expensesData = [];
 
 /* ================= AUTH ================= */
 
@@ -41,11 +44,7 @@ onAuthStateChanged(auth, user => {
   }
 });
 
-/* ================= COLLECTIONS ================= */
-
-function salesCol() {
-  return collection(db, "users", currentUser.uid, "sales");
-}
+/* ================= COLLECTION ================= */
 
 function expensesCol() {
   return collection(db, "users", currentUser.uid, "expenses");
@@ -55,9 +54,7 @@ function expensesCol() {
 
 function initApp() {
   initTabs();
-  initAnalytics();
-  listenSales();
-  listenExpenses();
+  initExpenses();
 }
 
 /* ================= TABS ================= */
@@ -71,135 +68,192 @@ function initTabs() {
   });
 }
 
-/* ================= DATA CACHE ================= */
+/* ================= EXPENSES ================= */
 
-let salesData = [];
-let expensesData = [];
+function initExpenses() {
+  expenses.innerHTML = `
+  <div class="card">
+    <h3>Нова / Редагування витрати</h3>
 
-/* ================= LISTENERS ================= */
+    <select id="expenseCategory">
+      <option>Корм</option>
+      <option>Зарибок</option>
+      <option>Пальне</option>
+      <option>Зарплата Охорона</option>
+      <option>Зарплата Рибаки</option>
+      <option>Харчування</option>
+      <option>Ремонт</option>
+    </select>
 
-function listenSales() {
-  onSnapshot(salesCol(), snap => {
-    salesData = [];
-    snap.forEach(docSnap => {
-      salesData.push(docSnap.data());
-    });
-    renderAnalytics();
-  });
+    <div id="expenseDynamic"></div>
+
+    <button id="saveExpenseBtn">Зберегти</button>
+  </div>
+
+  <div class="card">
+    <h3>Історія витрат</h3>
+    <div id="expensesHistory"></div>
+  </div>
+  `;
+
+  expenseCategory.onchange = renderExpenseForm;
+  saveExpenseBtn.onclick = saveExpense;
+
+  renderExpenseForm();
+  listenExpenses();
+}
+
+function renderExpenseForm(data = null) {
+  const cat = expenseCategory.value;
+  let html = "";
+
+  if (cat === "Корм") {
+    html = `
+      <select id="feedType">
+        <option>Комбікорм</option>
+        <option>Зерно</option>
+        <option>Відходи</option>
+        <option>Доставка</option>
+      </select>
+      <input id="feedName" placeholder="Назва">
+      <input id="feedWeight" type="number" placeholder="Вага (кг)">
+      <input id="feedSum" type="number" placeholder="Сума">
+    `;
+  }
+
+  if (cat === "Зарибок") {
+    html = `
+      <select id="stockType">
+        <option>Мальок</option>
+        <option>Транспорт</option>
+      </select>
+      <input id="stockFish" placeholder="Вид">
+      <input id="stockQty" type="number" placeholder="Кількість">
+      <input id="stockWeight" type="number" placeholder="Вага">
+      <input id="stockSum" type="number" placeholder="Сума">
+    `;
+  }
+
+  if (cat === "Пальне") {
+    html = `
+      <input id="fuelSum" type="number" placeholder="Сума">
+      <input id="fuelComment" placeholder="Коментар">
+    `;
+  }
+
+  if (cat === "Ремонт") {
+    html = `
+      <input id="repairName" placeholder="Опис">
+      <input id="repairSum" type="number" placeholder="Сума">
+    `;
+  }
+
+  expenseDynamic.innerHTML = html;
+
+  if (data) fillExpenseForm(data);
+}
+
+function fillExpenseForm(data) {
+  expenseCategory.value = data.category;
+  renderExpenseForm();
+
+  if (data.category === "Корм") {
+    feedType.value = data.type || "";
+    feedName.value = data.name || "";
+    feedWeight.value = data.weight || "";
+    feedSum.value = data.sum || "";
+  }
+
+  if (data.category === "Зарибок") {
+    stockType.value = data.type || "";
+    stockFish.value = data.fish || "";
+    stockQty.value = data.qty || "";
+    stockWeight.value = data.weight || "";
+    stockSum.value = data.sum || "";
+  }
+
+  if (data.category === "Пальне") {
+    fuelSum.value = data.sum || "";
+    fuelComment.value = data.comment || "";
+  }
+
+  if (data.category === "Ремонт") {
+    repairName.value = data.name || "";
+    repairSum.value = data.sum || "";
+  }
+}
+
+async function saveExpense() {
+  const cat = expenseCategory.value;
+
+  let data = {
+    date: new Date().toISOString().slice(0, 10),
+    category: cat
+  };
+
+  if (cat === "Корм") {
+    data.type = feedType.value;
+    data.name = feedName.value;
+    data.weight = Number(feedWeight.value || 0);
+    data.sum = Number(feedSum.value);
+  }
+
+  if (cat === "Зарибок") {
+    data.type = stockType.value;
+    data.fish = stockFish.value;
+    data.qty = Number(stockQty.value || 0);
+    data.weight = Number(stockWeight.value || 0);
+    data.sum = Number(stockSum.value);
+  }
+
+  if (cat === "Пальне") {
+    data.sum = Number(fuelSum.value);
+    data.comment = fuelComment.value;
+  }
+
+  if (cat === "Ремонт") {
+    data.name = repairName.value;
+    data.sum = Number(repairSum.value);
+  }
+
+  if (editingExpenseId) {
+    await updateDoc(
+      doc(db, "users", currentUser.uid, "expenses", editingExpenseId),
+      data
+    );
+    editingExpenseId = null;
+  } else {
+    await addDoc(expensesCol(), data);
+  }
 }
 
 function listenExpenses() {
   onSnapshot(expensesCol(), snap => {
+    expensesHistory.innerHTML = "";
     expensesData = [];
+
     snap.forEach(docSnap => {
-      expensesData.push(docSnap.data());
+      const e = docSnap.data();
+      expensesData.push({ id: docSnap.id, ...e });
+
+      expensesHistory.innerHTML += `
+        <div>
+          ${e.date} — ${e.category} — ${e.sum} грн
+          <button onclick="editExpense('${docSnap.id}')">✏</button>
+          <button onclick="deleteExpense('${docSnap.id}')">🗑</button>
+        </div>
+        <hr>
+      `;
     });
-    renderAnalytics();
   });
 }
 
-/* ================= АНАЛІТИКА ================= */
+window.deleteExpense = async function (id) {
+  await deleteDoc(doc(db, "users", currentUser.uid, "expenses", id));
+};
 
-function initAnalytics() {
-  analytics.innerHTML = `
-  <div class="card">
-    <h3>Фінансовий підсумок</h3>
-    <div id="analyticsBox"></div>
-  </div>
-
-  <div class="card">
-    <h3>Розбиття витрат по категоріях</h3>
-    <div id="categoriesBox"></div>
-  </div>
-
-  <div class="card">
-    <button id="exportBtn">📥 Експорт в Excel</button>
-  </div>
-  `;
-
-  dashboard.innerHTML = `
-  <div class="card">
-    <h3>Панель керування</h3>
-    <div id="dashboardBox"></div>
-  </div>
-  `;
-
-  exportBtn.onclick = exportExcel;
-}
-
-function renderAnalytics() {
-  const income = salesData.reduce((a, s) => a + (s.total || 0), 0);
-  const cost = expensesData.reduce((a, e) => a + (e.sum || 0), 0);
-  const totalKg = salesData.reduce((a, s) => a + (s.totalKg || 0), 0);
-  const costPerKg = totalKg ? (cost / totalKg).toFixed(2) : 0;
-
-  analyticsBox.innerHTML = `
-    Дохід: ${income} грн<br>
-    Витрати: ${cost} грн<br>
-    <b>Чистий прибуток: ${income - cost} грн</b><br>
-    Реалізовано: ${totalKg} кг<br>
-    Собівартість 1 кг: ${costPerKg} грн
-  `;
-
-  /* ===== РОЗБИТТЯ ПО КАТЕГОРІЯХ ===== */
-
-  const map = {};
-  expensesData.forEach(e => {
-    if (!map[e.category]) map[e.category] = 0;
-    map[e.category] += e.sum || 0;
-  });
-
-  categoriesBox.innerHTML = Object.entries(map)
-    .map(([k, v]) => `${k}: ${v} грн`)
-    .join("<br>");
-
-  /* ===== ПАНЕЛЬ ===== */
-
-  dashboardBox.innerHTML = `
-    Оборот: ${income} грн<br>
-    Витрати: ${cost} грн<br>
-    Прибуток: ${income - cost} грн<br>
-    Реалізація: ${totalKg} кг<br>
-    Собівартість 1 кг: ${costPerKg} грн
-  `;
-}
-
-/* ================= EXCEL ================= */
-
-function exportExcel() {
-
-  const salesRows = [];
-  salesData.forEach(s => {
-    if (s.items) {
-      s.items.forEach(i => {
-        salesRows.push({
-          Дата: s.date,
-          Покупець: s.buyer,
-          Риба: i.fish,
-          Кг: i.kg,
-          Ціна: i.price,
-          Сума: i.sum
-        });
-      });
-    }
-  });
-
-  const expensesRows = expensesData.map(e => ({
-    Дата: e.date,
-    Категорія: e.category,
-    Сума: e.sum,
-    Деталі: e.name || e.comment || ""
-  }));
-
-  const summaryRows = [
-    { Показник: "Дохід", Значення: salesData.reduce((a, s) => a + (s.total || 0), 0) },
-    { Показник: "Витрати", Значення: expensesData.reduce((a, e) => a + (e.sum || 0), 0) }
-  ];
-
-  const wb = XLSX.utils.book_new();
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(salesRows), "Продажі");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(expensesRows), "Витрати");
-  XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(summaryRows), "Підсумок");
-
-  XLSX.writeFile(wb, "звіт_ставок.xlsx");
-}
+window.editExpense = function (id) {
+  const expense = expensesData.find(e => e.id === id);
+  editingExpenseId = id;
+  fillExpenseForm(expense);
+};
