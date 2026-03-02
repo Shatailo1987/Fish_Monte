@@ -301,30 +301,36 @@ function initApp(user) {
       }
     };
 
-    saveExpense.onclick = async () => {
+saveExpense.onclick = async () => {
 
-      const cat = expenseCategory.value;
-      if (!cat) return;
+  const cat = expenseCategory.value;
+  if (!cat) return;
 
-      let data = {
-        category: cat,
-        date: new Date().toISOString()
-      };
+  let data = {
+    category: cat,
+    date: new Date().toISOString()
+  };
 
-      if (cat === "Корм") {
-        data.subType = subType.value;
-        data.name = name.value;
-        data.weight = Number(weight.value) || 0;
-        data.sum = Number(sum.value) || 0;
-      } else {
-        data.name = name.value;
-        data.sum = Number(sum.value) || 0;
-      }
+  if (cat === "Корм") {
+    data.subType = document.getElementById("subType")?.value || "";
+    data.name = document.getElementById("name")?.value || "";
+    data.weight = Number(document.getElementById("weight")?.value) || 0;
+    data.sum = Number(document.getElementById("sum")?.value) || 0;
+  }
 
-      await addDoc(expensesRef, data);
-      renderExpenses();
-    };
+  if (cat === "Пальне" || cat === "Ремонт" || cat === "Інше") {
+    data.name = document.getElementById("name")?.value || "";
+    data.sum = Number(document.getElementById("sum")?.value) || 0;
+  }
 
+  if (!data.sum) {
+    alert("Вкажіть суму");
+    return;
+  }
+
+  await addDoc(expensesRef, data);
+  renderExpenses();
+};
     onSnapshot(expensesRef, snap => {
 
       expensesList.innerHTML = "";
