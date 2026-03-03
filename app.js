@@ -373,11 +373,11 @@ function renderExpenses() {
   pricePerKg.oninput = calculate;
 }
    
-    if (["Пальне", "Ремонт", "Інше", "Зарплата Рибаки"].includes(cat)) {
-      dynamicFields.innerHTML = `
-        <input id="name" placeholder="Опис">
-        <input id="sum" type="number" placeholder="Сума">
-      `;
+    if (["Пальне", "Ремонт", "Інше"].includes(cat)) {
+  dynamicFields.innerHTML = `
+    <input id="name" placeholder="Опис">
+    <input id="sum" type="number" placeholder="Сума">
+  `;
     }
   };
 
