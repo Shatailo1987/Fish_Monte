@@ -4,60 +4,44 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Fish Monte PRO</title>
+  <title>Fish Monte</title>
 
   <!-- CSS -->
   <link rel="stylesheet" href="./style.css">
 
   <!-- ================= PWA ================= -->
-<link rel="manifest" href="./manifest.json">
-<meta name="theme-color" content="#0f6bff">
-<link rel="apple-touch-icon" href="./icons/icon-180.png">
-  <!-- Manifest -->
   <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#0f6bff">
 
-  <!-- Theme -->
-  <meta name="theme-color" content="#0b5ed7">
-  <meta name="mobile-web-app-capable" content="yes">
-
-  <!-- iOS Support -->
+  <!-- ================= iOS ================= -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="FishMonte">
+  <link rel="apple-touch-icon" href="./icons/icon-180.png?v=12">
 
-  <!-- Favicon -->
-  <link rel="icon" type="image/png" sizes="32x32" href="./icons/icon-32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="./icons/icon-16.png">
-
-  <!-- iOS Icon (ГОЛОВНЕ) -->
-  <link rel="apple-touch-icon" href="./icons/icon-180.png">
+  <!-- ================= Favicon ================= -->
+  <link rel="icon" href="./favicon.ico">
 
 </head>
-<script>
-window.addEventListener("load", () => {
-  setTimeout(() => {
-    const loader = document.getElementById("appLoader");
-    loader.style.opacity = "0";
-    loader.style.transition = "opacity 0.4s ease";
-    setTimeout(() => loader.remove(), 400);
-  }, 500);
-});
-</script>
+
 <body>
-<div id="appLoader" style="
-  position:fixed;
-  inset:0;
-  background:#0b5ed7;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  flex-direction:column;
-  color:white;
-  z-index:99999;
-">
-  <img src="icons/icon-192.png" width="80" style="margin-bottom:20px;">
-  <div class="loader"></div>
-</div>
+
+  <!-- Splash Loader -->
+  <div id="appLoader" style="
+    position:fixed;
+    inset:0;
+    background:#0f6bff;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+    color:white;
+    z-index:99999;
+  ">
+    <img src="./icons/icon-192.png" width="90" style="margin-bottom:20px;">
+    <div class="loader"></div>
+  </div>
+
   <!-- Update Banner -->
   <div id="updateBanner" style="
     display:none;
@@ -65,7 +49,7 @@ window.addEventListener("load", () => {
     bottom:20px;
     left:50%;
     transform:translateX(-50%);
-    background:#0b5ed7;
+    background:#0f6bff;
     color:white;
     padding:12px 20px;
     border-radius:8px;
@@ -75,7 +59,7 @@ window.addEventListener("load", () => {
     <button id="updateBtn" style="
       margin-left:10px;
       background:white;
-      color:#0b5ed7;
+      color:#0f6bff;
       border:none;
       padding:5px 10px;
       border-radius:5px;
@@ -84,6 +68,7 @@ window.addEventListener("load", () => {
     </button>
   </div>
 
+  <!-- Auth -->
   <div id="authScreen">
     <h2>Вхід</h2>
     <input type="email" id="email" placeholder="Email">
@@ -98,7 +83,7 @@ window.addEventListener("load", () => {
     <button id="logoutBtn">Вийти</button>
   </div>
 
-  <!-- Firebase SDK -->
+  <!-- Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
@@ -129,37 +114,40 @@ window.addEventListener("load", () => {
   <!-- Main App -->
   <script type="module" src="./app.js"></script>
 
-  <!-- Service Worker with Auto Update -->
+  <!-- Loader Hide -->
   <script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("sw.js").then(reg => {
-
-      reg.onupdatefound = () => {
-        const newWorker = reg.installing;
-
-        newWorker.onstatechange = () => {
-          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-            document.getElementById("updateBanner").style.display = "block";
-          }
-        };
-      };
-
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const loader = document.getElementById("appLoader");
+        loader.style.opacity = "0";
+        loader.style.transition = "opacity 0.4s ease";
+        setTimeout(() => loader.remove(), 400);
+      }, 500);
     });
-
-    document.getElementById("updateBtn").addEventListener("click", () => {
-      window.location.reload();
-    });
-  }
   </script>
-<script>
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js")
-      .then(reg => {
-        console.log("Service Worker Registered");
-      })
-      .catch(err => console.log("SW error:", err));
-  }
-</script>
-  
+
+  <!-- Service Worker (один, без дублювання) -->
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("./sw.js").then(reg => {
+
+        reg.onupdatefound = () => {
+          const newWorker = reg.installing;
+
+          newWorker.onstatechange = () => {
+            if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+              document.getElementById("updateBanner").style.display = "block";
+            }
+          };
+        };
+
+      });
+
+      document.getElementById("updateBtn").addEventListener("click", () => {
+        window.location.reload();
+      });
+    }
+  </script>
+
 </body>
 </html>
