@@ -325,42 +325,53 @@ function renderExpenses() {
       };
     }
 
-    if (cat === "Зарибок") {
-      dynamicFields.innerHTML = `
-        <select id="fishType">
-          <option value="">-- Вид риби --</option>
-          <option>Короп</option>
-          <option>Товстолоб</option>
-          <option>Білий амур</option>
-          <option>Карась</option>
-          <option>Щука</option>
-          <option>Судак</option>
-        </select>
+ if (cat === "Зарибок") {
+  dynamicFields.innerHTML = `
+    <select id="fishType">
+      <option value="">-- Вид риби --</option>
+      <option>Короп</option>
+      <option>Товстолоб</option>
+      <option>Білий амур</option>
+      <option>Карась</option>
+      <option>Щука</option>
+      <option>Судак</option>
+    </select>
 
-        <input id="quantity" type="number" placeholder="Кількість (шт)">
-        <input id="avgWeight" type="number" placeholder="Середня вага (г)">
-        <input id="pricePerKg" type="number" placeholder="Ціна за кг">
-        <input id="sum" type="number" placeholder="Сума" readonly>
-      `;
+    <input id="totalWeight" type="number" placeholder="Загальна вага (кг)">
+    <input id="avgWeight" type="number" placeholder="Середня вага (г)">
+    <input id="quantity" type="number" placeholder="Кількість (шт)" readonly>
 
-      const quantity = document.getElementById("quantity");
-      const avgWeight = document.getElementById("avgWeight");
-      const pricePerKg = document.getElementById("pricePerKg");
-      const sumInput = document.getElementById("sum");
+    <input id="pricePerKg" type="number" placeholder="Ціна за кг">
+    <input id="sum" type="number" placeholder="Сума" readonly>
+  `;
 
-      function calculateSum() {
-        const qty = Number(quantity.value) || 0;
-        const weight = Number(avgWeight.value) || 0;
-        const price = Number(pricePerKg.value) || 0;
-        const totalKg = (qty * weight) / 1000;
-        sumInput.value = Math.round(totalKg * price);
-      }
+  const totalWeight = document.getElementById("totalWeight");
+  const avgWeight = document.getElementById("avgWeight");
+  const quantity = document.getElementById("quantity");
+  const pricePerKg = document.getElementById("pricePerKg");
+  const sumInput = document.getElementById("sum");
 
-      quantity.oninput = calculateSum;
-      avgWeight.oninput = calculateSum;
-      pricePerKg.oninput = calculateSum;
+  function calculate() {
+
+    const totalKg = Number(totalWeight.value) || 0;
+    const avgG = Number(avgWeight.value) || 0;
+    const price = Number(pricePerKg.value) || 0;
+
+    // Розрахунок кількості
+    if (totalKg > 0 && avgG > 0) {
+      quantity.value = Math.round((totalKg * 1000) / avgG);
+    } else {
+      quantity.value = "";
     }
 
+    // Розрахунок суми
+    sumInput.value = Math.round(totalKg * price);
+  }
+
+  totalWeight.oninput = calculate;
+  avgWeight.oninput = calculate;
+  pricePerKg.oninput = calculate;
+}
     if (["Пальне", "Ремонт", "Інше", "Зарплата Рибаки"].includes(cat)) {
       dynamicFields.innerHTML = `
         <input id="name" placeholder="Опис">
