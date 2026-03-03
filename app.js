@@ -452,4 +452,3 @@ saveExpense.onclick = async () => {
       totalExpenses.innerText = total;
     });
   }
-}
