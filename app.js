@@ -372,10 +372,57 @@ function renderExpenses() {
   avgWeight.oninput = calculate;
   pricePerKg.oninput = calculate;
 }
-    if (["Пальне", "Ремонт", "Інше", "Зарплата Рибаки"].includes(cat)) {
-      dynamicFields.innerHTML = `
-        <input id="name" placeholder="Опис">
-        <input id="sum" type="number" placeholder="Сума">
+    // ===== ЗАРПЛАТА РИБАКИ =====
+if (cat === "Зарплата Рибаки") {
+
+  dynamicFields.innerHTML = `
+    <input id="fishermanName" placeholder="Прізвище рибака">
+
+    <input id="salaryAmount" type="number" placeholder="Основна зарплата">
+
+    <label>
+      <input type="checkbox" id="usedOwnCar">
+      Використовував власне авто
+    </label>
+
+    <input id="fuelCompensation" type="number"
+           placeholder="Компенсація палива"
+           disabled>
+
+    <input id="sum" type="number"
+           placeholder="Загальна сума"
+           readonly>
+  `;
+
+  const salaryInput = document.getElementById("salaryAmount");
+  const fuelInput = document.getElementById("fuelCompensation");
+  const carCheckbox = document.getElementById("usedOwnCar");
+  const sumInput = document.getElementById("sum");
+
+  function calculateTotal() {
+    const salary = Number(salaryInput.value) || 0;
+    const fuel = Number(fuelInput.value) || 0;
+    sumInput.value = salary + fuel;
+  }
+
+  salaryInput.oninput = calculateTotal;
+  fuelInput.oninput = calculateTotal;
+
+  carCheckbox.onchange = function() {
+    fuelInput.disabled = !this.checked;
+    if (!this.checked) fuelInput.value = "";
+    calculateTotal();
+  };
+}
+
+
+// ===== ІНШІ ПРОСТІ КАТЕГОРІЇ =====
+if (["Пальне", "Ремонт", "Інше"].includes(cat)) {
+  dynamicFields.innerHTML = `
+    <input id="name" placeholder="Опис">
+    <input id="sum" type="number" placeholder="Сума">
+  `;
+}
       `;
     }
   };
