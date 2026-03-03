@@ -305,7 +305,15 @@ function initApp(user) {
 
       const subType = document.getElementById("subType");
       const grainBlock = document.getElementById("grainBlock");
+window.deleteExpense = async function(id) {
+  if (!confirm("Видалити запис?")) return;
 
+  const { deleteDoc, doc } = await import(
+    "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+  );
+
+  await deleteDoc(doc(db, "users", auth.currentUser.uid, "expenses", id));
+};
       subType.onchange = () => {
         if (subType.value === "Зерно" || subType.value === "Відходи") {
           grainBlock.innerHTML = `
@@ -326,15 +334,7 @@ function initApp(user) {
         }
       };
     }
-window.deleteExpense = async function(id) {
-  if (!confirm("Видалити запис?")) return;
 
-  const { deleteDoc, doc } = await import(
-    "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
-  );
-
-  await deleteDoc(doc(db, "users", auth.currentUser.uid, "expenses", id));
-};
     // ---- ЗАРИБОК ----
     if (cat === "Зарибок") {
       dynamicFields.innerHTML = `
