@@ -253,15 +253,7 @@ function initApp(user) {
 
   content.innerHTML = `
     <h2>Витрати</h2>
-window.deleteExpense = async function(id) {
-  if (!confirm("Видалити запис?")) return;
 
-  const { deleteDoc, doc } = await import(
-    "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
-  );
-
-  await deleteDoc(doc(db, "users", auth.currentUser.uid, "expenses", id));
-};
     <select id="expenseCategory">
       <option value="">-- Оберіть категорію --</option>
       <option>Корм</option>
@@ -334,7 +326,15 @@ window.deleteExpense = async function(id) {
         }
       };
     }
+window.deleteExpense = async function(id) {
+  if (!confirm("Видалити запис?")) return;
 
+  const { deleteDoc, doc } = await import(
+    "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+  );
+
+  await deleteDoc(doc(db, "users", auth.currentUser.uid, "expenses", id));
+};
     // ---- ЗАРИБОК ----
     if (cat === "Зарибок") {
       dynamicFields.innerHTML = `
