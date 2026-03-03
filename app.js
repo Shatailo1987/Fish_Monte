@@ -249,7 +249,7 @@ function initApp(user) {
 
   /* ===================== ВИТРАТИ 3.0 ===================== */
 
- function renderExpenses() {
+function renderExpenses() {
 
   content.innerHTML = `
     <h2>Витрати</h2>
@@ -279,13 +279,12 @@ function initApp(user) {
   const expensesList = document.getElementById("expensesList");
   const totalExpenses = document.getElementById("totalExpenses");
 
-  // ===== ДИНАМІЧНІ ПОЛЯ =====
+  // ================= ДИНАМІЧНІ ПОЛЯ =================
   expenseCategory.onchange = () => {
 
     const cat = expenseCategory.value;
     dynamicFields.innerHTML = "";
 
-    // ---- КОРМ ----
     if (cat === "Корм") {
       dynamicFields.innerHTML = `
         <select id="subType">
@@ -298,7 +297,6 @@ function initApp(user) {
 
         <div id="grainBlock"></div>
 
-        <input id="name" placeholder="Назва">
         <input id="weight" type="number" placeholder="Вага (кг)">
         <input id="sum" type="number" placeholder="Сума">
       `;
@@ -327,7 +325,6 @@ function initApp(user) {
       };
     }
 
-    // ---- ЗАРИБОК ----
     if (cat === "Зарибок") {
       dynamicFields.innerHTML = `
         <select id="fishType">
@@ -364,7 +361,6 @@ function initApp(user) {
       pricePerKg.oninput = calculateSum;
     }
 
-    // ---- ПАЛЬНЕ / РЕМОНТ / ІНШЕ ----
     if (["Пальне", "Ремонт", "Інше", "Зарплата Рибаки"].includes(cat)) {
       dynamicFields.innerHTML = `
         <input id="name" placeholder="Опис">
@@ -373,22 +369,16 @@ function initApp(user) {
     }
   };
 
-  // ===== ЗБЕРЕЖЕННЯ =====
+  // ================= ЗБЕРЕЖЕННЯ =================
   document.getElementById("saveExpense").onclick = async () => {
 
     try {
 
       const cat = expenseCategory.value;
-      if (!cat) {
-        alert("Оберіть категорію");
-        return;
-      }
+      if (!cat) return alert("Оберіть категорію");
 
       const sum = Number(document.getElementById("sum")?.value);
-      if (!sum || sum <= 0) {
-        alert("Вкажіть суму");
-        return;
-      }
+      if (!sum || sum <= 0) return alert("Вкажіть суму");
 
       let data = {
         category: cat,
@@ -398,7 +388,6 @@ function initApp(user) {
 
       if (cat === "Корм") {
         data.subType = document.getElementById("subType")?.value || "";
-        data.name = document.getElementById("name")?.value || "";
         data.weight = Number(document.getElementById("weight")?.value) || 0;
         data.grainType = document.getElementById("grainType")?.value || "";
       }
@@ -417,68 +406,63 @@ function initApp(user) {
       await addDoc(expensesRef, data);
 
     } catch (err) {
-      console.error("FIRESTORE ERROR:", err);
+      console.error(err);
       alert("Помилка збереження");
     }
   };
 
-  // ===== SNAPSHOT =====
-onSnapshot(expensesRef, snap => {
+  // ================= SNAPSHOT =================
+  onSnapshot(expensesRef, snap => {
 
-  expensesList.innerHTML = "";
-  let total = 0;
+    expensesList.innerHTML = "";
+    let total = 0;
 
-  // Отримуємо масив і сортуємо нові зверху
-  const docs = [];
-  snap.forEach(doc => {
-    docs.push({ id: doc.id, ...doc.data() });
+    const docs = [];
+    snap.forEach(doc => {
+      docs.push({ id: doc.id, ...doc.data() });
+    });
+
+    docs.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+    docs.forEach(d => {
+
+      total += d.sum || 0;
+
+      let details = "";
+
+      if (d.category === "Корм") {
+        if (d.subType === "Зерно" || d.subType === "Відходи") {
+          details = `Тип: ${d.subType} (${d.grainType || "-"})<br>
+                     Вага: ${d.weight || 0} кг`;
+        } else {
+          details = `Тип: ${d.subType}<br>
+                     Вага: ${d.weight || 0} кг`;
+        }
+      }
+
+      if (d.category === "Зарибок") {
+        details = `Вид: ${d.fishType}<br>
+                   К-сть: ${d.quantity} шт<br>
+                   Середня вага: ${d.avgWeight} г`;
+      }
+
+      expensesList.innerHTML += `
+        <div style="border:1px solid #ccc; padding:10px; margin:6px 0; border-radius:6px;">
+          <b>${new Date(d.date).toLocaleDateString()}</b><br>
+          Категорія: <b>${d.category}</b><br>
+          ${details}
+          <br>
+          Сума: <b>${d.sum} грн</b>
+          <br><br>
+          <button onclick="deleteExpense('${d.id}')">🗑 Видалити</button>
+        </div>
+      `;
+    });
+
+    totalExpenses.innerText = total;
   });
 
-  docs.sort((a,b) => new Date(b.date) - new Date(a.date));
-
-docs.forEach(d => {
-
-  total += d.sum || 0;
-
-  let details = "";
-
-  if (d.category === "Корм") {
-
-    if (d.subType === "Зерно" || d.subType === "Відходи") {
-      details = `
-        Тип: ${d.subType} (${d.grainType || "-"})<br>
-        Вага: ${d.weight || 0} кг
-      `;
-    } else {
-      details = `
-        Тип: ${d.subType}<br>
-        Вага: ${d.weight || 0} кг
-      `;
-    }
-  }
-
-  if (d.category === "Зарибок") {
-    details = `
-      Вид риби: ${d.fishType}<br>
-      Кількість: ${d.quantity} шт<br>
-      Середня вага: ${d.avgWeight} г
-    `;
-  }
-
-  expensesList.innerHTML += `
-    <div style="border:1px solid #ccc; padding:10px; margin:6px 0; border-radius:6px;">
-      <b>${new Date(d.date).toLocaleDateString()}</b><br>
-      Категорія: <b>${d.category}</b><br>
-      ${details}
-      <br>
-      Сума: <b>${d.sum} грн</b>
-      <br><br>
-      <button onclick="deleteExpense('${d.id}')">🗑 Видалити</button>
-    </div>
-  `;
-});
-  totalExpenses.innerText = total;
-});
+}
 window.deleteExpense = async function(id) {
 
   if (!confirm("Видалити запис?")) return;
