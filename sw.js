@@ -1,4 +1,4 @@
-const CACHE_NAME = "fish-monte-v7";
+const CACHE_NAME = "fish-monte-v20";
 
 const urlsToCache = [
   "./",
@@ -7,8 +7,7 @@ const urlsToCache = [
   "./app.js",
   "./manifest.json",
   "./icons/icon-192.png",
-  "./icons/icon-512.png",
-  "./icons/icon-180.png"
+  "./icons/icon-512.png"
 ];
 
 self.addEventListener("install", event => {
