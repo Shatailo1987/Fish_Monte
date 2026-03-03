@@ -366,7 +366,7 @@ function initApp(user) {
 }
 }
   document.getElementById("saveExpense").onclick = async () => {
-
+console.log("SAVE CLICKED");
     const cat = document.getElementById("expenseCategory").value;
     if (!cat) {
       alert("Оберіть категорію");
