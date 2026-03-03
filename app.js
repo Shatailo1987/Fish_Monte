@@ -371,8 +371,8 @@ document.getElementById("saveExpense").onclick = async () => {
 
   try {
 
-    const cat = document.getElementById("expenseCategory")?.value;
-    if (!cat) {
+    const d.category = document.getElementById("expenseCategory")?.value;
+    if (!d.category) {
       alert("Оберіть категорію");
       return;
     }
@@ -386,18 +386,18 @@ document.getElementById("saveExpense").onclick = async () => {
     }
 
     let data = {
-      category: cat,
+      category: d.category,
       sum: sum,
       date: new Date().toISOString()
     };
 
-    if (cat === "Корм") {
+    if (d.category === "Корм") {
       data.subType = document.getElementById("subType")?.value || "";
       data.name = document.getElementById("name")?.value || "";
       data.weight = Number(document.getElementById("weight")?.value) || 0;
     }
 
-    if (["Пальне", "Ремонт", "Інше"].includes(cat)) {
+    if (["Пальне", "Ремонт", "Інше"].includes(d.category)) {
       data.name = document.getElementById("name")?.value || "";
     }
 
