@@ -358,7 +358,15 @@ function initApp(user) {
         const totalKg = (qty * weight) / 1000;
         sumInput.value = Math.round(totalKg * price);
       }
+window.deleteExpense = async function(id) {
+  if (!confirm("Видалити запис?")) return;
 
+  const { deleteDoc, doc } = await import(
+    "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js"
+  );
+
+  await deleteDoc(doc(db, "users", auth.currentUser.uid, "expenses", id));
+};
       quantity.oninput = calculateSum;
       avgWeight.oninput = calculateSum;
       pricePerKg.oninput = calculateSum;
