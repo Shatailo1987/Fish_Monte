@@ -458,3 +458,4 @@ function renderExpenses() {
     totalExpenses.innerText = total;
   });
 }
+}
