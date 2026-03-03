@@ -404,11 +404,12 @@ function renderExpenses() {
       }
 
       if (cat === "Зарибок") {
-        data.fishType = document.getElementById("fishType")?.value || "";
-        data.quantity = Number(document.getElementById("quantity")?.value) || 0;
-        data.avgWeight = Number(document.getElementById("avgWeight")?.value) || 0;
-        data.pricePerKg = Number(document.getElementById("pricePerKg")?.value) || 0;
-      }
+  data.fishType = document.getElementById("fishType")?.value || "";
+  data.totalWeight = Number(document.getElementById("totalWeight")?.value) || 0;  // ← ОСЬ ЦЕГО НЕ БУЛО
+  data.avgWeight = Number(document.getElementById("avgWeight")?.value) || 0;
+  data.quantity = Number(document.getElementById("quantity")?.value) || 0;
+  data.pricePerKg = Number(document.getElementById("pricePerKg")?.value) || 0;
+}
 
       if (["Пальне", "Ремонт", "Інше", "Зарплата Рибаки"].includes(cat)) {
         data.name = document.getElementById("name")?.value || "";
