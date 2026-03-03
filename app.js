@@ -279,25 +279,53 @@ function renderExpenses() {
   const expensesList = document.getElementById("expensesList");
   const totalExpenses = document.getElementById("totalExpenses");
 
-  /* ================= ДИНАМІЧНІ ПОЛЯ ================= */
-
+  // ================= ДИНАМІЧНІ ПОЛЯ =================
   expenseCategory.onchange = () => {
 
     const cat = expenseCategory.value;
     dynamicFields.innerHTML = "";
 
-    /* ===== КОРМ ===== */
     if (cat === "Корм") {
       dynamicFields.innerHTML = `
-        <input id="name" placeholder="Опис">
+        <select id="subType">
+          <option value="">-- Тип корму --</option>
+          <option>Комбікорм</option>
+          <option>Зерно</option>
+          <option>Відходи</option>
+          <option>Доставка</option>
+        </select>
+
+        <div id="grainBlock"></div>
+
         <input id="weight" type="number" placeholder="Вага (кг)">
         <input id="sum" type="number" placeholder="Сума">
       `;
+
+      const subType = document.getElementById("subType");
+      const grainBlock = document.getElementById("grainBlock");
+
+      subType.onchange = () => {
+        if (subType.value === "Зерно" || subType.value === "Відходи") {
+          grainBlock.innerHTML = `
+            <select id="grainType">
+              <option value="">-- Оберіть зерно --</option>
+              <option>Ячмінь</option>
+              <option>Пшениця</option>
+              <option>Кукурудза</option>
+              <option>Соняшник</option>
+              <option>Сорго</option>
+              <option>Гречка</option>
+              <option>Горох</option>
+              <option>Пшоно</option>
+            </select>
+          `;
+        } else {
+          grainBlock.innerHTML = "";
+        }
+      };
     }
 
-    /* ===== ЗАРИБОК ===== */
-    else if (cat === "Зарибок") {
-
+    if (cat === "Зарибок") {
       dynamicFields.innerHTML = `
         <select id="fishType">
           <option value="">-- Вид риби --</option>
@@ -309,80 +337,31 @@ function renderExpenses() {
           <option>Судак</option>
         </select>
 
-        <input id="totalWeight" type="number" placeholder="Загальна вага (кг)">
+        <input id="quantity" type="number" placeholder="Кількість (шт)">
         <input id="avgWeight" type="number" placeholder="Середня вага (г)">
-        <input id="quantity" type="number" placeholder="Кількість (шт)" readonly>
         <input id="pricePerKg" type="number" placeholder="Ціна за кг">
         <input id="sum" type="number" placeholder="Сума" readonly>
       `;
 
-      const totalWeight = document.getElementById("totalWeight");
-      const avgWeight = document.getElementById("avgWeight");
       const quantity = document.getElementById("quantity");
+      const avgWeight = document.getElementById("avgWeight");
       const pricePerKg = document.getElementById("pricePerKg");
       const sumInput = document.getElementById("sum");
 
-      function calculate() {
-        const totalKg = Number(totalWeight.value) || 0;
-        const avgG = Number(avgWeight.value) || 0;
+      function calculateSum() {
+        const qty = Number(quantity.value) || 0;
+        const weight = Number(avgWeight.value) || 0;
         const price = Number(pricePerKg.value) || 0;
-
-        quantity.value = (totalKg > 0 && avgG > 0)
-          ? Math.round((totalKg * 1000) / avgG)
-          : "";
-
+        const totalKg = (qty * weight) / 1000;
         sumInput.value = Math.round(totalKg * price);
       }
 
-      totalWeight.oninput = calculate;
-      avgWeight.oninput = calculate;
-      pricePerKg.oninput = calculate;
+      quantity.oninput = calculateSum;
+      avgWeight.oninput = calculateSum;
+      pricePerKg.oninput = calculateSum;
     }
 
-    /* ===== ЗАРПЛАТА РИБАКИ ===== */
-    else if (cat === "Зарплата Рибаки") {
-
-      dynamicFields.innerHTML = `
-        <input id="fishermanName" placeholder="Прізвище рибака">
-        <input id="salaryAmount" type="number" placeholder="Основна зарплата">
-
-        <label>
-          <input type="checkbox" id="usedOwnCar">
-          Використовував власне авто
-        </label>
-
-        <input id="fuelCompensation" type="number"
-               placeholder="Компенсація палива"
-               disabled>
-
-        <input id="sum" type="number"
-               placeholder="Загальна сума"
-               readonly>
-      `;
-
-      const salaryInput = document.getElementById("salaryAmount");
-      const fuelInput = document.getElementById("fuelCompensation");
-      const carCheckbox = document.getElementById("usedOwnCar");
-      const sumInput = document.getElementById("sum");
-
-      function calculateTotal() {
-        const salary = Number(salaryInput.value) || 0;
-        const fuel = Number(fuelInput.value) || 0;
-        sumInput.value = salary + fuel;
-      }
-
-      salaryInput.oninput = calculateTotal;
-      fuelInput.oninput = calculateTotal;
-
-      carCheckbox.onchange = function () {
-        fuelInput.disabled = !this.checked;
-        if (!this.checked) fuelInput.value = "";
-        calculateTotal();
-      };
-    }
-
-    /* ===== ПРОСТІ КАТЕГОРІЇ ===== */
-    else if (["Пальне", "Ремонт", "Інше"].includes(cat)) {
+    if (["Пальне", "Ремонт", "Інше", "Зарплата Рибаки"].includes(cat)) {
       dynamicFields.innerHTML = `
         <input id="name" placeholder="Опис">
         <input id="sum" type="number" placeholder="Сума">
@@ -390,8 +369,7 @@ function renderExpenses() {
     }
   };
 
-  /* ================= ЗБЕРЕЖЕННЯ ================= */
-
+  // ================= ЗБЕРЕЖЕННЯ =================
   document.getElementById("saveExpense").onclick = async () => {
 
     try {
@@ -408,10 +386,21 @@ function renderExpenses() {
         date: new Date().toISOString()
       };
 
-      if (cat === "Зарплата Рибаки") {
-        data.fishermanName = document.getElementById("fishermanName")?.value || "";
-        data.salaryAmount = Number(document.getElementById("salaryAmount")?.value) || 0;
-        data.fuelCompensation = Number(document.getElementById("fuelCompensation")?.value) || 0;
+      if (cat === "Корм") {
+        data.subType = document.getElementById("subType")?.value || "";
+        data.weight = Number(document.getElementById("weight")?.value) || 0;
+        data.grainType = document.getElementById("grainType")?.value || "";
+      }
+
+      if (cat === "Зарибок") {
+        data.fishType = document.getElementById("fishType")?.value || "";
+        data.quantity = Number(document.getElementById("quantity")?.value) || 0;
+        data.avgWeight = Number(document.getElementById("avgWeight")?.value) || 0;
+        data.pricePerKg = Number(document.getElementById("pricePerKg")?.value) || 0;
+      }
+
+      if (["Пальне", "Ремонт", "Інше", "Зарплата Рибаки"].includes(cat)) {
+        data.name = document.getElementById("name")?.value || "";
       }
 
       await addDoc(expensesRef, data);
@@ -422,26 +411,39 @@ function renderExpenses() {
     }
   };
 
-  /* ================= SNAPSHOT ================= */
-
+  // ================= SNAPSHOT =================
   onSnapshot(expensesRef, snap => {
 
     expensesList.innerHTML = "";
     let total = 0;
 
+    const docs = [];
     snap.forEach(doc => {
+      docs.push({ id: doc.id, ...doc.data() });
+    });
 
-      const d = doc.data();
+    docs.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+    docs.forEach(d => {
+
       total += d.sum || 0;
 
       let details = "";
 
-      if (d.category === "Зарплата Рибаки") {
-        details = `
-          Рибак: ${d.fishermanName || "-"}<br>
-          Зарплата: ${d.salaryAmount || 0} грн<br>
-          Паливо: ${d.fuelCompensation || 0} грн
-        `;
+      if (d.category === "Корм") {
+        if (d.subType === "Зерно" || d.subType === "Відходи") {
+          details = `Тип: ${d.subType} (${d.grainType || "-"})<br>
+                     Вага: ${d.weight || 0} кг`;
+        } else {
+          details = `Тип: ${d.subType}<br>
+                     Вага: ${d.weight || 0} кг`;
+        }
+      }
+
+      if (d.category === "Зарибок") {
+        details = `Вид: ${d.fishType}<br>
+                   К-сть: ${d.quantity} шт<br>
+                   Середня вага: ${d.avgWeight} г`;
       }
 
       expensesList.innerHTML += `
@@ -451,11 +453,13 @@ function renderExpenses() {
           ${details}
           <br>
           Сума: <b>${d.sum} грн</b>
+          <br><br>
+          <button onclick="deleteExpense('${d.id}')">🗑 Видалити</button>
         </div>
       `;
     });
 
     totalExpenses.innerText = total;
   });
-}
+
 }
