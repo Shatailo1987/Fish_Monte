@@ -571,6 +571,20 @@ if (cat === "Зарибок") {
 `;
       }
 
+      if (d.category === "Зарплата Рибаки") {
+
+  let typeText = d.salaryType === "fixed"
+    ? "Фіксована сума"
+    : d.percentValue + "% від продажів";
+
+  details = `
+    Рибалка: ${d.workerName}<br>
+    Тип: ${typeText}<br>
+    ${d.fuelCompensation ? "Пальне: " + d.fuelAmount + " грн<br>" : ""}
+    ${d.comment ? "Коментар: " + d.comment : ""}
+  `;
+}
+      
       expensesList.innerHTML += `
         <div style="border:1px solid #ccc; padding:10px; margin:6px 0; border-radius:6px;">
           <b>${new Date(d.date).toLocaleDateString()}</b><br>
