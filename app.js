@@ -365,17 +365,21 @@ function initApp(user) {
   pricePerKg.oninput = calculateSum;
 }
 }
-  document.getElementById("saveExpense").onclick = async () => {
-console.log("SAVE CLICKED");
-    const cat = document.getElementById("expenseCategory").value;
+document.getElementById("saveExpense").onclick = async () => {
+
+  console.log("SAVE CLICKED");
+
+  try {
+
+    const cat = document.getElementById("expenseCategory")?.value;
     if (!cat) {
       alert("Оберіть категорію");
       return;
     }
 
     const sumInput = document.getElementById("sum");
-    const sum = Number(document.getElementById("sum")?.value) || 0;
-    
+    const sum = Number(sumInput?.value);
+
     if (!sum || sum <= 0) {
       alert("Вкажіть суму");
       return;
@@ -393,14 +397,21 @@ console.log("SAVE CLICKED");
       data.weight = Number(document.getElementById("weight")?.value) || 0;
     }
 
-    if (cat === "Пальне" || cat === "Ремонт" || cat === "Інше") {
+    if (["Пальне", "Ремонт", "Інше"].includes(cat)) {
       data.name = document.getElementById("name")?.value || "";
     }
 
+    console.log("Дані перед збереженням:", data);
+
     await addDoc(expensesRef, data);
 
-    renderExpenses();
-  };
+    console.log("Успішно збережено");
+
+  } catch (err) {
+    console.error("FIRESTORE ERROR:", err);
+    alert("Помилка збереження");
+  }
+};
 
     onSnapshot(expensesRef, snap => {
 
