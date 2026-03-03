@@ -38,7 +38,20 @@
 </head>
 
 <body>
-
+<div id="appLoader" style="
+  position:fixed;
+  inset:0;
+  background:#0b5ed7;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  flex-direction:column;
+  color:white;
+  z-index:99999;
+">
+  <img src="icons/icon-192.png" width="80" style="margin-bottom:20px;">
+  <div class="loader"></div>
+</div>
   <!-- Update Banner -->
   <div id="updateBanner" style="
     display:none;
