@@ -474,4 +474,3 @@ window.deleteExpense = async function(id) {
   await deleteDoc(doc(db, "users", auth.currentUser.uid, "expenses", id));
 };
 }
-}
