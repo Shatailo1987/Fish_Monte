@@ -423,25 +423,25 @@ function initApp(user) {
   };
 
   // ===== SNAPSHOT =====
-  onSnapshot(expensesRef, snap => {
+ onSnapshot(expensesRef, snap => {
 
-    expensesList.innerHTML = "";
-    let total = 0;
+  expensesList.innerHTML = "";
+  let total = 0;
 
-    snap.forEach(doc => {
-      const d = doc.data();
-      total += d.sum || 0;
+  snap.forEach(doc => {
+    const d = doc.data();
+    total += d.sum || 0;
 
-      expensesList.innerHTML += `
-        <div>
-          ${new Date(d.date).toLocaleDateString()} —
-          ${d.category} —
-          ${d.sum} грн
-        </div>
-      `;
-    });
-
-    totalExpenses.innerText = total;
+    expensesList.innerHTML += `
+      <div>
+        ${new Date(d.date).toLocaleDateString()} —
+        ${d.category} —
+        ${d.sum} грн
+      </div>
+    `;
   });
+
+  totalExpenses.innerText = total;
+});
 
 }
