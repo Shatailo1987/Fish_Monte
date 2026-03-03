@@ -436,21 +436,47 @@ onSnapshot(expensesRef, snap => {
 
   docs.sort((a,b) => new Date(b.date) - new Date(a.date));
 
-  docs.forEach(d => {
+docs.forEach(d => {
 
-    total += d.sum || 0;
+  total += d.sum || 0;
 
-    expensesList.innerHTML += `
-      <div style="border:1px solid #ccc; padding:10px; margin:6px 0; border-radius:6px;">
-        <b>${new Date(d.date).toLocaleDateString()}</b><br>
-        Категорія: ${d.category}<br>
-        Сума: <b>${d.sum} грн</b>
-        <br><br>
-        <button onclick="deleteExpense('${d.id}')">🗑 Видалити</button>
-      </div>
+  let details = "";
+
+  if (d.category === "Корм") {
+
+    if (d.subType === "Зерно" || d.subType === "Відходи") {
+      details = `
+        Тип: ${d.subType} (${d.grainType || "-"})<br>
+        Вага: ${d.weight || 0} кг
+      `;
+    } else {
+      details = `
+        Тип: ${d.subType}<br>
+        Вага: ${d.weight || 0} кг
+      `;
+    }
+  }
+
+  if (d.category === "Зарибок") {
+    details = `
+      Вид риби: ${d.fishType}<br>
+      Кількість: ${d.quantity} шт<br>
+      Середня вага: ${d.avgWeight} г
     `;
-  });
+  }
 
+  expensesList.innerHTML += `
+    <div style="border:1px solid #ccc; padding:10px; margin:6px 0; border-radius:6px;">
+      <b>${new Date(d.date).toLocaleDateString()}</b><br>
+      Категорія: <b>${d.category}</b><br>
+      ${details}
+      <br>
+      Сума: <b>${d.sum} грн</b>
+      <br><br>
+      <button onclick="deleteExpense('${d.id}')">🗑 Видалити</button>
+    </div>
+  `;
+});
   totalExpenses.innerText = total;
 });
 window.deleteExpense = async function(id) {
