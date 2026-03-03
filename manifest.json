@@ -11,10 +11,21 @@
   "description": "Професійна система обліку рибного господарства",
   "categories": ["business", "productivity"],
   "icons": [
+  {
+  "name": "Fish Monte PRO",
+  "short_name": "FishMonte",
+  "start_url": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#0b5ed7",
+  "theme_color": "#0b5ed7",
+  "description": "Професійна система обліку рибного господарства",
+  "icons": [
     {
       "src": "icons/icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     },
     {
       "src": "icons/icon-512.png",
