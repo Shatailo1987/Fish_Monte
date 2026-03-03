@@ -403,9 +403,9 @@ function renderExpenses() {
         data.grainType = document.getElementById("grainType")?.value || "";
       }
 
-      if (cat === "Зарибок") {
+if (cat === "Зарибок") {
   data.fishType = document.getElementById("fishType")?.value || "";
-  data.totalWeight = Number(document.getElementById("totalWeight")?.value) || 0;
+  data.totalWeight = Number(document.getElementById("totalWeight")?.value) || 0;  // ← ОСЬ ЦЕГО НЕ БУЛО
   data.avgWeight = Number(document.getElementById("avgWeight")?.value) || 0;
   data.quantity = Number(document.getElementById("quantity")?.value) || 0;
   data.pricePerKg = Number(document.getElementById("pricePerKg")?.value) || 0;
