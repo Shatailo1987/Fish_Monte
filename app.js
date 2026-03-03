@@ -372,7 +372,6 @@ function renderExpenses() {
   avgWeight.oninput = calculate;
   pricePerKg.oninput = calculate;
 }
-
     if (cat === "Зарплата Рибаки") {
 
   dynamicFields.innerHTML = `
