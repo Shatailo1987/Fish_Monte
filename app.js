@@ -449,5 +449,6 @@ saveExpense.onclick = async () => {
         `;
       });
 
-      totalExpenses.innerText = total;
+       totalExpenses.innerText = total;
     });
+  }
