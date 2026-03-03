@@ -508,9 +508,22 @@ if (cat === "Зарибок") {
   data.pricePerKg = Number(document.getElementById("pricePerKg")?.value) || 0;
 }
 
-      if (["Пальне", "Ремонт", "Інше", "Зарплата Рибаки"].includes(cat)) {
-        data.name = document.getElementById("name")?.value || "";
-      }
+     if (cat === "Зарплата Рибаки") {
+  data.workerName = document.getElementById("workerName")?.value || "";
+  data.salaryType = document.getElementById("salaryType")?.value || "";
+  data.comment = document.getElementById("comment")?.value || "";
+
+  if (data.salaryType === "fixed") {
+    data.fixedSum = Number(document.getElementById("fixedSum")?.value) || 0;
+  }
+
+  if (data.salaryType === "percent") {
+    data.percentValue = Number(document.getElementById("percentValue")?.value) || 0;
+  }
+
+  data.fuelCompensation = document.getElementById("fuelCheckbox")?.checked || false;
+  data.fuelAmount = Number(document.getElementById("fuelAmount")?.value) || 0;
+}
 
       await addDoc(expensesRef, data);
 
