@@ -9,19 +9,18 @@
   <!-- CSS -->
   <link rel="stylesheet" href="./style.css">
 
-  <!-- ================= PWA ================= -->
+  <!-- PWA -->
   <link rel="manifest" href="./manifest.json">
   <meta name="theme-color" content="#0f6bff">
 
-  <!-- ================= iOS ================= -->
+  <!-- iOS -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="FishMonte">
-  <link rel="apple-touch-icon" href="./icons/icon-180.png?v=12">
+  <link rel="apple-touch-icon" href="./icons/icon-180.png?v=20">
 
-  <!-- ================= Favicon ================= -->
+  <!-- Favicon -->
   <link rel="icon" href="./favicon.ico">
-
 </head>
 
 <body>
@@ -36,8 +35,7 @@
     justify-content:center;
     flex-direction:column;
     color:white;
-    z-index:99999;
-  ">
+    z-index:99999;">
     <img src="./icons/icon-192.png" width="90" style="margin-bottom:20px;">
     <div class="loader"></div>
   </div>
@@ -117,16 +115,18 @@
   <!-- Loader Hide -->
   <script>
     window.addEventListener("load", () => {
-      setTimeout(() => {
-        const loader = document.getElementById("appLoader");
-        loader.style.opacity = "0";
-        loader.style.transition = "opacity 0.4s ease";
-        setTimeout(() => loader.remove(), 400);
-      }, 500);
+      const loader = document.getElementById("appLoader");
+      if (loader) {
+        setTimeout(() => {
+          loader.style.opacity = "0";
+          loader.style.transition = "opacity 0.4s ease";
+          setTimeout(() => loader.remove(), 400);
+        }, 500);
+      }
     });
   </script>
 
-  <!-- Service Worker (один, без дублювання) -->
+  <!-- Service Worker -->
   <script>
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("./sw.js").then(reg => {
@@ -143,9 +143,12 @@
 
       });
 
-      document.getElementById("updateBtn").addEventListener("click", () => {
-        window.location.reload();
-      });
+      const btn = document.getElementById("updateBtn");
+      if (btn) {
+        btn.addEventListener("click", () => {
+          window.location.reload();
+        });
+      }
     }
   </script>
 
