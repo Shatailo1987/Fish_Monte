@@ -423,20 +423,30 @@ function initApp(user) {
   };
 
   // ===== SNAPSHOT =====
- onSnapshot(expensesRef, snap => {
+onSnapshot(expensesRef, snap => {
 
   expensesList.innerHTML = "";
   let total = 0;
 
+  // Отримуємо масив і сортуємо нові зверху
+  const docs = [];
   snap.forEach(doc => {
-    const d = doc.data();
+    docs.push({ id: doc.id, ...doc.data() });
+  });
+
+  docs.sort((a,b) => new Date(b.date) - new Date(a.date));
+
+  docs.forEach(d => {
+
     total += d.sum || 0;
 
     expensesList.innerHTML += `
-      <div>
-        ${new Date(d.date).toLocaleDateString()} —
-        ${d.category} —
-        ${d.sum} грн
+      <div style="border:1px solid #ccc; padding:10px; margin:6px 0; border-radius:6px;">
+        <b>${new Date(d.date).toLocaleDateString()}</b><br>
+        Категорія: ${d.category}<br>
+        Сума: <b>${d.sum} грн</b>
+        <br><br>
+        <button onclick="deleteExpense('${d.id}')">🗑 Видалити</button>
       </div>
     `;
   });
