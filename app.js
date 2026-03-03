@@ -462,7 +462,6 @@ function renderExpenses() {
     totalExpenses.innerText = total;
   });
 
-}
 window.deleteExpense = async function(id) {
 
   if (!confirm("Видалити запис?")) return;
