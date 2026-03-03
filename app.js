@@ -372,7 +372,103 @@ function renderExpenses() {
   avgWeight.oninput = calculate;
   pricePerKg.oninput = calculate;
 }
-   
+
+    if (cat === "Зарплата Рибаки") {
+
+  dynamicFields.innerHTML = `
+    <input id="workerName" placeholder="ПІБ рибалки">
+
+    <select id="salaryType">
+      <option value="fixed">Фіксована сума</option>
+      <option value="percent">% від продажів (на сьогодні)</option>
+    </select>
+
+    <div id="salaryInputBlock"></div>
+
+    <label style="display:block;margin-top:10px;">
+      <input type="checkbox" id="fuelCheckbox">
+      Компенсація пального
+    </label>
+
+    <div id="fuelBlock"></div>
+
+    <input id="sum" type="number" placeholder="Загальна сума" readonly>
+
+    <input id="comment" placeholder="Коментар (необов'язково)">
+  `;
+
+  const salaryType = document.getElementById("salaryType");
+  const salaryInputBlock = document.getElementById("salaryInputBlock");
+  const fuelCheckbox = document.getElementById("fuelCheckbox");
+  const fuelBlock = document.getElementById("fuelBlock");
+  const sumInput = document.getElementById("sum");
+
+  let baseSalary = 0;
+  let fuelAmount = 0;
+
+  function updateTotal() {
+    sumInput.value = baseSalary + fuelAmount;
+  }
+
+  async function calculatePercent(percent) {
+    const snap = await getDocs(salesRef);
+    let totalSales = 0;
+
+    snap.forEach(doc => {
+      totalSales += doc.data().totalSum || 0;
+    });
+
+    baseSalary = Math.round((totalSales * percent) / 100);
+    updateTotal();
+  }
+
+  function renderSalaryInput() {
+
+    if (salaryType.value === "fixed") {
+      salaryInputBlock.innerHTML = `
+        <input id="fixedSum" type="number" placeholder="Введіть суму">
+      `;
+
+      document.getElementById("fixedSum").oninput = e => {
+        baseSalary = Number(e.target.value) || 0;
+        updateTotal();
+      };
+    }
+
+    if (salaryType.value === "percent") {
+      salaryInputBlock.innerHTML = `
+        <input id="percentValue" type="number" placeholder="% від продажів">
+      `;
+
+      document.getElementById("percentValue").oninput = e => {
+        const percent = Number(e.target.value) || 0;
+        calculatePercent(percent);
+      };
+    }
+  }
+
+  renderSalaryInput();
+  salaryType.onchange = renderSalaryInput;
+
+  fuelCheckbox.onchange = () => {
+    if (fuelCheckbox.checked) {
+      fuelBlock.innerHTML = `
+        <input id="fuelAmount" type="number" placeholder="Сума за пальне">
+      `;
+
+      document.getElementById("fuelAmount").oninput = e => {
+        fuelAmount = Number(e.target.value) || 0;
+        updateTotal();
+      };
+
+    } else {
+      fuelBlock.innerHTML = "";
+      fuelAmount = 0;
+      updateTotal();
+    }
+  };
+}
+    
     if (["Пальне", "Ремонт", "Інше"].includes(cat)) {
   dynamicFields.innerHTML = `
     <input id="name" placeholder="Опис">
