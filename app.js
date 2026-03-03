@@ -452,9 +452,12 @@ function renderExpenses() {
       }
 
       if (d.category === "Зарибок") {
-        details = `Вид: ${d.fishType}<br>
-                   К-сть: ${d.quantity} шт<br>
-                   Середня вага: ${d.avgWeight} г`;
+       details = `
+  Вид: ${d.fishType}<br>
+  Загальна вага: ${d.totalWeight || 0} кг<br>
+  Середня вага: ${d.avgWeight || 0} г<br>
+  Кількість: ${d.quantity || 0} шт
+`;
       }
 
       expensesList.innerHTML += `
