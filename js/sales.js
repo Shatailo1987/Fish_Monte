@@ -117,22 +117,6 @@ renderWeights();
 weightInput.focus();   // ← додали
 
 };
-  
-document.querySelectorAll(".quickWeight").forEach(btn=>{
-
-btn.onclick = ()=>{
-
-const w = Number(btn.dataset.w);
-
-weights.push(w);
-
-renderWeights();
-
-weightInput.focus();
-
-};
-
-});
 
 weightInput.addEventListener("keydown", e => {
 
