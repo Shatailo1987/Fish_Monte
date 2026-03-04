@@ -1,5 +1,3 @@
-import { deleteDoc, doc, updateDoc } 
-from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 export async function renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot) {
 
 let buyers = [];
@@ -36,8 +34,7 @@ ${b.name} (${b.phone})
 </select>
 
 <input id="weightInput" type="number" placeholder="Наважка кг">
-
-<button id="addWeight">Додати</button>
+<button id="addWeight">Додати наважку</button>
 
 <div id="weightsList"></div>
 <div><b>Разом кг: <span id="totalKg">0</span></b></div>
@@ -56,53 +53,15 @@ ${b.name} (${b.phone})
 <h3>Історія</h3>
 <div id="salesList"></div>
 `;
-  
-const buyerSelect = document.getElementById("buyerSelect");
-const newName = document.getElementById("newName");
-const newPhone = document.getElementById("newPhone");
-
-const fishType = document.getElementById("fishType");
-const weightInput = document.getElementById("weightInput");
-const addWeight = document.getElementById("addWeight");
-
-const weightsList = document.getElementById("weightsList");
-const totalKg = document.getElementById("totalKg");
-
-const priceInput = document.getElementById("priceInput");
-const addFish = document.getElementById("addFish");
-
-const itemsList = document.getElementById("itemsList");
-const totalSum = document.getElementById("totalSum");
-
-const saveSale = document.getElementById("saveSale");
-const salesList = document.getElementById("salesList");
-  
 function renderWeights(){
 
 weightsList.innerHTML =
-weights.map((w,i) => `
-<div>
-${i+1}. ${w} кг 
-<button data-index="${i}" class="removeWeight">❌</button>
-</div>
-`).join("");
+weights.map(w => `<div>${w} кг</div>`).join("");
 
 totalKg.innerText =
-weights.length ? weights.reduce((a,b)=>a+b,0) : 0;
+weights.reduce((a,b)=>a+b,0);
 
 }
-
-weightsList.onclick = e => {
-
-if(!e.target.classList.contains("removeWeight")) return;
-
-const index = e.target.dataset.index;
-
-weights.splice(index,1);
-
-renderWeights();
-
-};
 
 addWeight.onclick = () => {
 
@@ -116,19 +75,7 @@ weightInput.value = "";
 
 renderWeights();
 
-weightInput.focus();   // ← додали
-
 };
-
-weightInput.addEventListener("keydown", e => {
-
-if(e.key === "Enter"){
-
-addWeight.click();
-
-}
-
-});
   
 function renderItems(){
 
@@ -147,9 +94,9 @@ ${i.kg} × ${i.price}
 
 </div>
 `).join("");
-  
+
 totalSum.innerText =
-items.length ? items.reduce((a,b)=>a+b.sum,0) : 0;
+items.reduce((a,b)=>a+b.sum,0);
 
 }
   
@@ -157,13 +104,8 @@ addFish.onclick = () => {
 
 if(!weights.length) return;
 
-if(!priceInput.value){
-alert("Вкажіть ціну за кг");
-return;
-}
-
-const kg = weights.length ? weights.reduce((a,b)=>a+b,0) : 0;
-const price = Number(priceInput.value) || 0;
+const kg = weights.reduce((a,b)=>a+b,0);
+const price = Number(priceInput.value);
 const fish = fishType.value;
 
 items.push({
@@ -179,11 +121,6 @@ weights = [];
 renderWeights();
 renderItems();
 
-priceInput.value="";
-weightInput.value="";
-weightInput.focus();
-weightInput.select();
-
 };
   
 saveSale.onclick = async () => {
@@ -192,10 +129,7 @@ const selectedPhone = buyerSelect.value;
 const newNameVal = newName.value.trim();
 const newPhoneVal = newPhone.value.trim();
 
-if(!items.length){
-alert("Додайте рибу до продажу");
-return;
-}
+if(!items.length) return;
 
 let buyerName="";
 let buyerPhone="";
@@ -236,37 +170,20 @@ date:new Date().toISOString()
 });
 
 items=[];
-weights=[];
 
 renderItems();
 renderWeights();
 
-priceInput.value="";
-weightInput.value="";
-
-weightInput.focus();
-
 };
-onSnapshot(salesRef, snap => {
+  onSnapshot(salesRef,snap=>{
 
-salesList.innerHTML = "";
+salesList.innerHTML="";
 
-const docs = [];
+snap.forEach(doc=>{
 
-snap.forEach(d => {
-docs.push({
-id: d.id,
-...d.data()
-});
-});
+const d = doc.data();
 
-docs.sort((a,b)=> new Date(b.date) - new Date(a.date));
-
-let html = "";
-
-docs.forEach(d => {
-
-html += `
+salesList.innerHTML += `
 <details style="border:1px solid #999;margin:5px;padding:5px;">
 
 <summary>
@@ -276,12 +193,7 @@ ${d.totalKg} кг —
 ${d.totalSum} грн
 </summary>
 
-<div style="margin:6px 0;">
-<button class="editSale" data-id="${d.id}">✏ Редагувати</button>
-<button class="deleteSale" data-id="${d.id}">❌ Видалити</button>
-</div>
-
-${d.items.map(i => `
+${d.items.map(i=>`
 
 <div style="margin-left:10px;">
 
@@ -299,37 +211,25 @@ ${i.weights.join(" + ")}
 
 });
 
-salesList.innerHTML = html;
-
-document.querySelectorAll(".deleteSale").forEach(btn => {
-
-btn.onclick = async () => {
-
-if(!confirm("Видалити продаж?")) return;
-
-const saleRef = doc(salesRef, btn.dataset.id);
+});
   
-await deleteDoc(saleRef);
+const buyerSelect = document.getElementById("buyerSelect");
+const newName = document.getElementById("newName");
+const newPhone = document.getElementById("newPhone");
 
-};
+const fishType = document.getElementById("fishType");
+const weightInput = document.getElementById("weightInput");
+const addWeight = document.getElementById("addWeight");
 
-});
+const weightsList = document.getElementById("weightsList");
+const totalKg = document.getElementById("totalKg");
 
-document.querySelectorAll(".editSale").forEach(btn => {
+const priceInput = document.getElementById("priceInput");
+const addFish = document.getElementById("addFish");
 
-btn.onclick = () => {
+const itemsList = document.getElementById("itemsList");
+const totalSum = document.getElementById("totalSum");
 
-const sale = docs.find(s => s.id === btn.dataset.id);
-
-items = JSON.parse(JSON.stringify(sale.items));
-
-renderItems();
-
-window.scrollTo(0,0);
-
-};
-
-});
-
-});
+const saveSale = document.getElementById("saveSale");
+const salesList = document.getElementById("salesList");
 }
