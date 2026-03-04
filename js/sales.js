@@ -78,6 +78,7 @@ const totalSum = document.getElementById("totalSum");
 
 const saveSale = document.getElementById("saveSale");
 const salesList = document.getElementById("salesList");
+  
 function renderWeights(){
 
 weightsList.innerHTML =
@@ -86,19 +87,12 @@ weights.map((w,i) => `
 ${i+1}. ${w} кг 
 <button data-index="${i}" class="removeWeight">❌</button>
 </div>
-`).join("")
-  
-weightsList.onclick = e => {
+`).join("");
 
-if(!e.target.classList.contains("removeWeight")) return;
+totalKg.innerText =
+weights.reduce((a,b)=>a+b,0);
 
-const index = e.target.dataset.index;
-
-weights.splice(index,1);
-
-renderWeights();
-
-};
+}
   
 totalKg.innerText =
 weights.reduce((a,b)=>a+b,0);
