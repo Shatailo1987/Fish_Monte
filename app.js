@@ -610,7 +610,7 @@ data.fuelAmount = data.fuelCompensation && fuelField ? Number(fuelField.value) :
       expensesList.innerHTML += `
         <div style="border:1px solid #ccc; padding:10px; margin:6px 0; border-radius:6px;">
           <b>${new Date(d.date).toLocaleDateString()}</b><br>
-          Категорія: <b>${d.category}</b><br>
+         Категорія: <b style="color:#2c7">${d.category}</b><br>
           ${details}
           <br>
           Сума: <b>${d.sum} грн</b>
