@@ -202,9 +202,15 @@ date:new Date().toISOString()
 });
 
 items=[];
+weights=[];
 
 renderItems();
 renderWeights();
+
+priceInput.value="";
+weightInput.value="";
+
+weightInput.focus();
 
 };
   onSnapshot(salesRef,snap=>{
