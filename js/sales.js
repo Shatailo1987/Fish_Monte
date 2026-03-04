@@ -192,6 +192,9 @@ weights = [];
 renderWeights();
 renderItems();
 
+weightInput.value="";
+weightInput.focus();
+
 };
   
 saveSale.onclick = async () => {
