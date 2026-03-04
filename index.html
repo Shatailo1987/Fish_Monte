@@ -81,34 +81,6 @@
     <button id="logoutBtn">Вийти</button>
   </div>
 
-  <!-- Firebase -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-    import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, signOut } 
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-    import { getFirestore } 
-    from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-      apiKey: "AIzaSyDDroTHvtLRlgzsYvZzZ6ouabAj7gZ-9A0",
-      authDomain: "oblik-stavka.firebaseapp.com",
-      projectId: "oblik-stavka"
-    };
-
-    const firebaseApp = initializeApp(firebaseConfig);
-    const auth = getAuth(firebaseApp);
-    const db = getFirestore(firebaseApp);
-
-    window.firebaseAuth = auth;
-    window.firebaseDB = db;
-    window.firebaseFns = {
-      createUserWithEmailAndPassword,
-      signInWithEmailAndPassword,
-      onAuthStateChanged,
-      signOut
-    };
-  </script>
-
   <!-- Main App -->
   <script type="module" src="./app.js"></script>
 
