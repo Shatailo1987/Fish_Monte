@@ -606,6 +606,7 @@ data.fuelAmount = data.fuelCompensation && fuelField ? Number(fuelField.value) :
 
         if (d.fuelCompensation) {
   totalFuelCompensation += d.fuelAmount || 0;
+  totalSalary += (d.fixedSum || 0);
 }
         
 let salaryText = "";
