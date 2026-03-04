@@ -89,8 +89,8 @@ ${i+1}. ${w} кг
 </div>
 `).join("");
 
-totalKg.innerText =
-weights.reduce((a,b)=>a+b,0);
+totalSum.innerText =
+items.length ? items.reduce((a,b)=>a+b.sum,0) : 0;
 
 }
 
