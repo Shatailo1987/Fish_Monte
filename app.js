@@ -251,7 +251,6 @@ function initApp(user) {
 
 function renderExpenses() {
 
-  const salesRef = collection(db, "users", user.uid, "sales");
   content.innerHTML = `
     <h2>Витрати</h2>
 
