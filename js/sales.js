@@ -262,8 +262,6 @@ docs.sort((a,b)=> new Date(b.date) - new Date(a.date));
 
 docs.forEach(d=>{
 
-const d = doc.data();
-
 salesList.innerHTML += `
 <details style="border:1px solid #999;margin:5px;padding:5px;">
 
@@ -289,8 +287,6 @@ ${i.weights.join(" + ")}
 
 </details>
 `;
-
-});
 
 });
   
