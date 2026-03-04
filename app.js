@@ -578,7 +578,9 @@ if (cat === "Зарибок") {
 
       if (d.category === "Зарплата Рибаки") {
 
-        totalFuelCompensation += d.fuelAmount || 0;
+        if (d.fuelCompensation) {
+  totalFuelCompensation += d.fuelAmount || 0;
+}
         
   let typeText = d.salaryType === "fixed"
     ? "Фіксована сума"
