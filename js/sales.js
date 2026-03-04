@@ -251,10 +251,10 @@ salesList.innerHTML = "";
 
 const docs = [];
 
-snap.forEach(doc => {
+snap.forEach(d => {
 docs.push({
-id: doc.id,
-...doc.data()
+id: d.id,
+...d.data()
 });
 });
 
