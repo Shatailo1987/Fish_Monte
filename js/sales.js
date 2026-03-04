@@ -99,6 +99,16 @@ weightInput.focus();   // ← додали
 
 };
   
+weightInput.addEventListener("keypress", e => {
+
+if(e.key === "Enter"){
+
+addWeight.click();
+
+}
+
+});
+  
 function renderItems(){
 
 itemsList.innerHTML = items.map(i => `
