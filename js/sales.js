@@ -305,6 +305,22 @@ btn.onclick = async () => {
 if(!confirm("Видалити продаж?")) return;
 
 await deleteDoc(doc(salesRef, btn.dataset.id));
+  
+document.querySelectorAll(".editSale").forEach(btn => {
+
+btn.onclick = () => {
+
+const sale = docs.find(s => s.id === btn.dataset.id);
+
+items = sale.items;
+
+renderItems();
+
+window.scrollTo(0,0);
+
+};
+
+});
 
 };
 
