@@ -181,7 +181,7 @@ return;
 }
 
 const kg = weights.length ? weights.reduce((a,b)=>a+b,0) : 0;
-const price = Number(priceInput.value);
+const price = Number(priceInput.value) || 0;
 const fish = fishType.value;
 
 items.push({
