@@ -46,7 +46,7 @@ document.getElementById("tabSales").onclick =
 () => renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot);
 
 document.getElementById("tabExpenses").onclick =
-() => renderExpenses(content);
+() => renderExpenses(content, expensesRef, salesRef, getDocs, addDoc, onSnapshot);
 
 document.getElementById("tabAnalytics").onclick =
 () => renderAnalytics(content, salesRef, expensesRef, getDocs);
