@@ -6,6 +6,9 @@ import { renderExpenses } from "./js/expenses.js";
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+import { renderSales } from "./js/sales.js";
+import { renderExpenses } from "./js/expenses.js";
+
 const auth = window.firebaseAuth;
 const db = window.firebaseDB;
 const {
