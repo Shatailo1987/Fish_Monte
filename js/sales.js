@@ -82,7 +82,19 @@ ${i+1}. ${w} кг
 <button data-index="${i}" class="removeWeight">❌</button>
 </div>
 `).join("")
+  
+weightsList.onclick = e => {
 
+if(!e.target.classList.contains("removeWeight")) return;
+
+const index = e.target.dataset.index;
+
+weights.splice(index,1);
+
+renderWeights();
+
+};
+  
 totalKg.innerText =
 weights.reduce((a,b)=>a+b,0);
 
