@@ -276,6 +276,9 @@ function renderExpenses() {
 
 <div><b>Компенсація пального рибалкам: <span id="totalFuel">0</span> грн</b>
 </div>
+
+<div><b>Зарплата рибалкам: <span id="totalSalary">0</span> грн</b>
+</div>
   `;
 
   const expenseCategory = document.getElementById("expenseCategory");
