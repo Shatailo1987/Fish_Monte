@@ -308,34 +308,8 @@ ${i.weights.join(" + ")}
 
 });
 
-salesList.innerHTML = html; `
-<details style="border:1px solid #999;margin:5px;padding:5px;">
-
-<summary>
-${new Date(d.date).toLocaleDateString()} —
-${d.buyerName} (${d.buyerPhone}) —
-${d.totalKg} кг —
-${d.totalSum} грн
-</summary>
-
-${d.items.map(i => `
-
-<div style="margin-left:10px;">
-
-${i.fish}:
-${i.weights.join(" + ")}
-= ${i.kg} кг
-(наважок: ${i.weights.length})
-
-</div>
-
-`).join("")}
-
-</details>
-`;
+salesList.innerHTML = html;
 
 });
 
-});
-  
 }
