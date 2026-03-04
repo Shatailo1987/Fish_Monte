@@ -298,6 +298,7 @@ ${i.weights.join(" + ")}
 });
 
 salesList.innerHTML = html;
+
 document.querySelectorAll(".deleteSale").forEach(btn => {
 
 btn.onclick = async () => {
@@ -305,7 +306,11 @@ btn.onclick = async () => {
 if(!confirm("Видалити продаж?")) return;
 
 await deleteDoc(doc(salesRef, btn.dataset.id));
-  
+
+};
+
+});
+
 document.querySelectorAll(".editSale").forEach(btn => {
 
 btn.onclick = () => {
@@ -321,9 +326,3 @@ window.scrollTo(0,0);
 };
 
 });
-
-};
-
-});
-
-}
