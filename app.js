@@ -548,7 +548,10 @@ const fuelField = document.getElementById("fuelAmount");
 data.fuelAmount = data.fuelCompensation && fuelField ? Number(fuelField.value) : 0;
 }
 
-data.sum = baseSalary + fuelAmount;
+if (cat === "Зарплата Рибаки") {
+  data.sum = baseSalary + fuelAmount;
+}
+
 await addDoc(expensesRef, data);
 
     } catch (err) {
