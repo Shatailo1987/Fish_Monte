@@ -23,11 +23,11 @@ initAuth(auth, initApp);
 
 function initApp(user) {
 
-  const salesRef = collection(db, "users", user.uid, "sales");
-  const buyersRef = collection(db, "users", user.uid, "buyers");
-  const expensesRef = collection(db, "users", user.uid, "expenses");
+const salesRef = collection(db, "users", user.uid, "sales");
+const buyersRef = collection(db, "users", user.uid, "buyers");
+const expensesRef = collection(db, "users", user.uid, "expenses");
 
- app.innerHTML = `
+app.innerHTML = `
 <button id="tabSales">Продажі</button>
 <button id="tabExpenses">Витрати</button>
 <button id="tabAnalytics">Аналітика</button>
@@ -47,7 +47,6 @@ document.getElementById("tabExpenses").onclick =
 document.getElementById("tabAnalytics").onclick =
 () => renderAnalytics(content, salesRef, expensesRef, getDocs);
 
+renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot);
+
 }
-
-  renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot);
-
