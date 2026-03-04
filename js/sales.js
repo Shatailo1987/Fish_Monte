@@ -34,7 +34,12 @@ ${b.name} (${b.phone})
 </select>
 
 <input id="weightInput" type="number" placeholder="Наважка кг">
-<button id="addWeight">Додати наважку</button>
+
+<button id="addWeight">Додати</button>
+
+<button class="quickWeight" data-w="10">+10</button>
+<button class="quickWeight" data-w="20">+20</button>
+<button class="quickWeight" data-w="50">+50</button>
 
 <div id="weightsList"></div>
 <div><b>Разом кг: <span id="totalKg">0</span></b></div>
