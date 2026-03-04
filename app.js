@@ -1,4 +1,4 @@
-import {
+import { renderSales } from "./js/sales.js";
   collection,
   addDoc,
   onSnapshot,
