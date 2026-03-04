@@ -531,7 +531,8 @@ if (cat === "Зарибок") {
   }
 
   data.fuelCompensation = document.getElementById("fuelCheckbox")?.checked || false;
-  data.fuelAmount = Number(document.getElementById("fuelAmount")?.value) || 0;
+  const fuelField = document.getElementById("fuelAmount");
+data.fuelAmount = fuelField ? Number(fuelField.value) : 0;
 }
 
       await addDoc(expensesRef, data);
