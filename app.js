@@ -538,7 +538,7 @@ if (cat === "Зарибок") {
   onSnapshot(expensesRef, snap => {
 
     expensesList.innerHTML = "";
-    let total = 0;
+    let totalFuelCompensation = 0;
 
     const docs = [];
     snap.forEach(doc => {
@@ -574,6 +574,8 @@ if (cat === "Зарибок") {
 
       if (d.category === "Зарплата Рибаки") {
 
+        totalFuelCompensation += d.fuelAmount || 0;
+        
   let typeText = d.salaryType === "fixed"
     ? "Фіксована сума"
     : d.percentValue + "% від продажів";
