@@ -175,6 +175,11 @@ addFish.onclick = () => {
 
 if(!weights.length) return;
 
+if(!priceInput.value){
+alert("Вкажіть ціну за кг");
+return;
+}
+
 const kg = weights.length ? weights.reduce((a,b)=>a+b,0) : 0;
 const price = Number(priceInput.value);
 const fish = fishType.value;
@@ -194,6 +199,7 @@ renderItems();
 
 weightInput.value="";
 weightInput.focus();
+weightInput.select();
 
 };
   
