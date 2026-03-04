@@ -37,10 +37,6 @@ ${b.name} (${b.phone})
 
 <button id="addWeight">Додати</button>
 
-<button class="quickWeight" data-w="10">+10</button>
-<button class="quickWeight" data-w="20">+20</button>
-<button class="quickWeight" data-w="50">+50</button>
-
 <div id="weightsList"></div>
 <div><b>Разом кг: <span id="totalKg">0</span></b></div>
 
