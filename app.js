@@ -1,6 +1,6 @@
+import { initAuth } from "./js/auth.js";
 import { renderSales } from "./js/sales.js";
 import { renderExpenses } from "./js/expenses.js";
-import { initAuth } from "./js/auth.js";
   collection,
   addDoc,
   onSnapshot,
