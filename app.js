@@ -329,10 +329,6 @@ function renderExpenses() {
       };
     }
 
-    if (["Пальне", "Ремонт", "Інше"].includes(cat)) {
-  data.name = document.getElementById("name")?.value || "";
-}
-
   if (cat === "Зарибок") {
   dynamicFields.innerHTML = `
     <select id="fishType">
