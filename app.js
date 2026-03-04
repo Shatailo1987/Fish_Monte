@@ -426,32 +426,40 @@ function renderExpenses() {
     updateTotal();
   }
 
-  function renderSalaryInput() {
+ function renderSalaryInput() {
 
-    if (salaryType.value === "fixed") {
-      salaryInputBlock.innerHTML = `
-        <input id="fixedSum" type="number" placeholder="Введіть суму">
-      `;
+  if (salaryType.value === "fixed") {
 
-      document.getElementById("fixedSum").oninput = e => {
-        baseSalary = Number(e.target.value) || 0;
-        updateTotal();
-      };
-    }
+    salaryInputBlock.innerHTML = `
+      <input id="fixedSum" type="number" placeholder="Введіть суму">
+    `;
 
-    if (salaryType.value === "percent") {
-      salaryInputBlock.innerHTML = `
-        <input id="percentValue" type="number" placeholder="% від продажів">
-      `;
+    const fixedInput = document.getElementById("fixedSum");
 
-    document.getElementById("percentValue").oninput = async e => {
-  const percent = Number(e.target.value) || 0;
-  await calculatePercent(percent);
-  updateTotal();
-};
-    }
-    
-    }
+    fixedInput.addEventListener("input", () => {
+      baseSalary = Number(fixedInput.value) || 0;
+      updateTotal();
+    });
+
+  }
+
+  if (salaryType.value === "percent") {
+
+    salaryInputBlock.innerHTML = `
+      <input id="percentValue" type="number" placeholder="% від продажів">
+    `;
+
+    const percentInput = document.getElementById("percentValue");
+
+    percentInput.addEventListener("input", async () => {
+      const percent = Number(percentInput.value) || 0;
+      await calculatePercent(percent);
+      updateTotal();
+    });
+
+  }
+
+}
 
   renderSalaryInput();
   salaryType.onchange = renderSalaryInput;
