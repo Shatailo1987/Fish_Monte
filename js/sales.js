@@ -105,11 +105,6 @@ weights.splice(index,1);
 renderWeights();
 
 };
-  
-totalKg.innerText =
-weights.reduce((a,b)=>a+b,0);
-
-}
 
 addWeight.onclick = () => {
 
