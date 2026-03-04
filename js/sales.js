@@ -138,17 +138,6 @@ weightInput.focus();
 
 });
 
-btn.onclick = ()=>{
-
-const w = Number(btn.dataset.w);
-
-weights.push(w);
-
-renderWeights();
-
-};
-
-});
 weightInput.addEventListener("keydown", e => {
 
 if(e.key === "Enter"){
