@@ -1,15 +1,14 @@
-import { initAuth } from "./js/auth.js";
-import { renderSales } from "./js/sales.js";
-import { renderExpenses } from "./js/expenses.js";
-import { renderAnalytics } from "./js/analytics.js";
+import {
   collection,
   addDoc,
   onSnapshot,
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
 
+import { initAuth } from "./js/auth.js";
 import { renderSales } from "./js/sales.js";
 import { renderExpenses } from "./js/expenses.js";
+import { renderAnalytics } from "./js/analytics.js";
 
 const auth = window.firebaseAuth;
 const db = window.firebaseDB;
