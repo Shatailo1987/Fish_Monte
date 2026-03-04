@@ -262,7 +262,10 @@ salesList.innerHTML="";
 const docs = [];
 
 snap.forEach(doc=>{
-docs.push(doc.data());
+docs.push({
+id: doc.id,
+...doc.data()
+});
 });
 
 docs.sort((a,b)=> new Date(b.date) - new Date(a.date));
