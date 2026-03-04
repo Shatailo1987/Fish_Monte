@@ -1,4 +1,6 @@
-export async function renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot, deleteDoc, doc, updateDoc) {
+import { deleteDoc, doc, updateDoc } 
+from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+export async function renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot)
 
 let buyers = [];
 let weights = [];
