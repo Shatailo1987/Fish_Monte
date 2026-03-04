@@ -99,7 +99,7 @@ weightInput.focus();   // ← додали
 
 };
   
-weightInput.addEventListener("keypress", e => {
+weightInput.addEventListener("keydown", e => {
 
 if(e.key === "Enter"){
 
