@@ -5,7 +5,7 @@ createUserWithEmailAndPassword,
 signInWithEmailAndPassword,
 onAuthStateChanged,
 signOut
-} = window.firebaseFns;
+} = window.firebaseFns || {};
 
 const authScreen = document.getElementById("authScreen");
 const app = document.getElementById("app");
