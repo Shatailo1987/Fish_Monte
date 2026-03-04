@@ -498,7 +498,11 @@ function renderExpenses() {
         sum: sum,
         date: new Date().toISOString()
       };
-
+      
+      if (["Пальне", "Ремонт", "Інше"].includes(cat)) {
+  data.name = document.getElementById("name")?.value || "";
+}
+      
       if (cat === "Корм") {
         data.subType = document.getElementById("subType")?.value || "";
         data.weight = Number(document.getElementById("weight")?.value) || 0;
