@@ -561,6 +561,7 @@ data.fuelAmount = data.fuelCompensation && fuelField ? Number(fuelField.value) :
 
   expensesList.innerHTML = "";
   let totalFuelCompensation = 0;
+  let totalSalary = 0;
   let total = 0;
 
     const docs = [];
