@@ -76,7 +76,7 @@ const salesList = document.getElementById("salesList");
 function renderWeights(){
 
 weightsList.innerHTML =
-weights.map((w,i) => `<div>${i+1}. ${w} кг</div>`)
+weights.map((w,i) => `<div>${i+1}. ${w} кг</div>`).join("");
 
 totalKg.innerText =
 weights.reduce((a,b)=>a+b,0);
