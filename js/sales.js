@@ -261,28 +261,22 @@ weightInput.value="";
 weightInput.focus();
 
 };
-  onSnapshot(salesRef,snap=>{
+onSnapshot(salesRef, snap => {
 
-salesList.innerHTML="";
-
-const docs = [];
-
-onSnapshot(salesRef,snap=>{
-
-salesList.innerHTML="";
+salesList.innerHTML = "";
 
 const docs = [];
 
-snap.forEach(doc=>{
+snap.forEach(doc => {
 docs.push({
-id:doc.id,
+id: doc.id,
 ...doc.data()
 });
 });
 
 docs.sort((a,b)=> new Date(b.date) - new Date(a.date));
 
-docs.forEach(d=>{
+docs.forEach(d => {
 
 salesList.innerHTML += `
 <details style="border:1px solid #999;margin:5px;padding:5px;">
@@ -294,7 +288,7 @@ ${d.totalKg} кг —
 ${d.totalSum} грн
 </summary>
 
-${d.items.map(i=>`
+${d.items.map(i => `
 
 <div style="margin-left:10px;">
 
