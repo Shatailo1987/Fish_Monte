@@ -548,7 +548,8 @@ const fuelField = document.getElementById("fuelAmount");
 data.fuelAmount = data.fuelCompensation && fuelField ? Number(fuelField.value) : 0;
 }
 
-      await addDoc(expensesRef, data);
+data.sum = baseSalary + fuelAmount;
+await addDoc(expensesRef, data);
 
     } catch (err) {
       console.error(err);
