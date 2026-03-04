@@ -562,6 +562,10 @@ if (cat === "Зарибок") {
 
       let details = "";
 
+      if (["Пальне", "Ремонт", "Інше"].includes(d.category)) {
+  details = `Опис: ${d.name || "-"}`;
+}
+
       if (d.category === "Корм") {
         if (d.subType === "Зерно" || d.subType === "Відходи") {
           details = `Тип: ${d.subType} (${d.grainType || "-"})<br>
