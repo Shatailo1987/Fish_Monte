@@ -165,7 +165,7 @@ ${i.kg} × ${i.price}
 
 </div>
 `).join("");
-
+  
 totalSum.innerText =
 items.length ? items.reduce((a,b)=>a+b.sum,0) : 0;
 
