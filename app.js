@@ -396,7 +396,7 @@ function renderExpenses() {
 
     <div id="fuelBlock"></div>
 
-    <input id="sum" type="number" placeholder="Загальна сума" readonly>
+    <input id="sum" type="hidden">
 
     <input id="comment" placeholder="Коментар (необов'язково)">
   `;
