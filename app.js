@@ -10,9 +10,7 @@ import { renderSales } from "./js/sales.js";
 import { renderExpenses } from "./js/expenses.js";
 import { renderAnalytics } from "./js/analytics.js";
 
-const auth = window.firebaseAuth;
-const db = window.firebaseDB;
-const { signOut } = window.firebaseFns;
+import { auth, db } from "./firebase.js";
 
 const app = document.getElementById("app");
 
