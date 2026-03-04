@@ -167,7 +167,7 @@ ${i.kg} × ${i.price}
 `).join("");
 
 totalSum.innerText =
-items.reduce((a,b)=>a+b.sum,0);
+items.length ? items.reduce((a,b)=>a+b.sum,0) : 0;
 
 }
   
