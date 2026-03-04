@@ -604,9 +604,15 @@ data.fuelAmount = data.fuelCompensation && fuelField ? Number(fuelField.value) :
   totalFuelCompensation += d.fuelAmount || 0;
 }
         
-  let typeText = d.salaryType === "fixed"
-    ? "Фіксована сума"
-    : d.percentValue + "% від продажів";
+let salaryText = "";
+
+if (d.salaryType === "fixed") {
+  salaryText = "Зарплата: " + (d.fixedSum || 0) + " грн";
+}
+
+if (d.salaryType === "percent") {
+  salaryText = d.percentValue + "% від продажів";
+}
 
   details = `
     Рибалка: ${d.workerName}<br>
