@@ -206,6 +206,11 @@ weightInput.select();
   
 saveSale.onclick = async () => {
 
+if(!items.length){
+alert("Додайте рибу до продажу");
+return;
+}
+
 const selectedPhone = buyerSelect.value;
 const newNameVal = newName.value.trim();
 const newPhoneVal = newPhone.value.trim();
