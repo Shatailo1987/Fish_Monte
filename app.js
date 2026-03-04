@@ -604,10 +604,16 @@ data.fuelAmount = data.fuelCompensation && fuelField ? Number(fuelField.value) :
 
 if (d.category === "Зарплата Рибаки") {
 
-totalSalary += (d.fixedSum || 0);
+if (d.salaryType === "fixed") {
+    totalSalary += d.fixedSum || 0;
+}
+
+if (d.salaryType === "percent") {
+    totalSalary += d.sum || 0;
+}
 
 if (d.fuelCompensation) {
-totalFuelCompensation += d.fuelAmount || 0;
+    totalFuelCompensation += d.fuelAmount || 0;
 }
         
 let salaryText = "";
