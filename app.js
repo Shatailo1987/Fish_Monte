@@ -614,12 +614,12 @@ if (d.salaryType === "percent") {
   salaryText = d.percentValue + "% від продажів";
 }
 
-  details = `
-    Рибалка: ${d.workerName}<br>
-    Тип: ${typeText}<br>
-    ${d.fuelCompensation ? "Пальне: " + d.fuelAmount + " грн<br>" : ""}
-    ${d.comment ? "Коментар: " + d.comment : ""}
-  `;
+details = `
+  Рибалка: ${d.workerName}<br>
+  ${salaryText}<br>
+  ${d.fuelCompensation ? "Пальне: " + d.fuelAmount + " грн<br>" : ""}
+  ${d.comment ? "Коментар: " + d.comment : ""}
+`;
 }
       
       expensesList.innerHTML += `
