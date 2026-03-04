@@ -252,7 +252,15 @@ weightInput.focus();
 
 salesList.innerHTML="";
 
+const docs = [];
+
 snap.forEach(doc=>{
+docs.push(doc.data());
+});
+
+docs.sort((a,b)=> new Date(b.date) - new Date(a.date));
+
+docs.forEach(d=>{
 
 const d = doc.data();
 
