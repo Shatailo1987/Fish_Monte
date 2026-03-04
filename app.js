@@ -19,10 +19,6 @@ const {
   signOut
 } = window.firebaseFns;
 
-const authScreen = document.getElementById("authScreen");
-const app = document.getElementById("app");
-const authError = document.getElementById("authError");
-
 initAuth(auth, initApp);
 
 function initApp(user) {
