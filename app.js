@@ -1,4 +1,5 @@
 import { renderSales } from "./js/sales.js";
+import { renderExpenses } from "./js/expenses.js";
   collection,
   addDoc,
   onSnapshot,
