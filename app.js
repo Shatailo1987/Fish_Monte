@@ -34,13 +34,14 @@ function initApp(user) {
   const buyersRef = collection(db, "users", user.uid, "buyers");
   const expensesRef = collection(db, "users", user.uid, "expenses");
 
-  app.innerHTML = `
-    <button id="tabSales">Продажі</button>
-    <button id="tabExpenses">Витрати</button>
-    <button id="logoutBtn">Вийти</button>
-    <hr>
-    <div id="content"></div>
-  `;
+ app.innerHTML = `
+<button id="tabSales">Продажі</button>
+<button id="tabExpenses">Витрати</button>
+<button id="tabAnalytics">Аналітика</button>
+<button id="logoutBtn">Вийти</button>
+<hr>
+<div id="content"></div>
+`;
 
   document.getElementById("logoutBtn").onclick = () => signOut(auth);
 document.getElementById("tabSales").onclick =
