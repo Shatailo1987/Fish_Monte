@@ -261,9 +261,15 @@ salesList.innerHTML="";
 
 const docs = [];
 
+onSnapshot(salesRef,snap=>{
+
+salesList.innerHTML="";
+
+const docs = [];
+
 snap.forEach(doc=>{
 docs.push({
-id: doc.id,
+id:doc.id,
 ...doc.data()
 });
 });
@@ -301,5 +307,3 @@ ${i.weights.join(" + ")}
 });
 
 });
-
-}
