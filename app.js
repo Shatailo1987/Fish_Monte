@@ -1,6 +1,7 @@
 import { initAuth } from "./js/auth.js";
 import { renderSales } from "./js/sales.js";
 import { renderExpenses } from "./js/expenses.js";
+import { renderAnalytics } from "./js/analytics.js";
   collection,
   addDoc,
   onSnapshot,
