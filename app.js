@@ -1,9 +1,13 @@
 import {
-  collection,
-  addDoc,
-  onSnapshot,
-  getDocs
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+getFirestore,
+collection,
+addDoc,
+getDocs,
+onSnapshot,
+deleteDoc,
+doc,
+updateDoc
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import { initAuth } from "./js/auth.js";
 import { renderSales } from "./js/sales.js";
