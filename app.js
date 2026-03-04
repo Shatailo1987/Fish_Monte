@@ -1,12 +1,8 @@
 import {
-getFirestore,
 collection,
 addDoc,
 getDocs,
-onSnapshot,
-deleteDoc,
-doc,
-updateDoc
+onSnapshot
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 import { initAuth } from "./js/auth.js";
@@ -42,7 +38,7 @@ const content = document.getElementById("content");
 document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
 document.getElementById("tabSales").onclick =
-() => renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot, deleteDoc, doc, updateDoc);
+() => renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot);
 
 document.getElementById("tabExpenses").onclick =
 () => renderExpenses(content, expensesRef, salesRef, getDocs, addDoc, onSnapshot);
