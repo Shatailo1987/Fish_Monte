@@ -1,18 +1,15 @@
 export function initAuth(auth, initApp) {
 
-const firebaseFns = window.firebaseFns || {};
-
-const createUserWithEmailAndPassword = firebaseFns.createUserWithEmailAndPassword;
-const signInWithEmailAndPassword = firebaseFns.signInWithEmailAndPassword;
-const onAuthStateChanged = firebaseFns.onAuthStateChanged;
-const signOut = firebaseFns.signOut;
+const {
+createUserWithEmailAndPassword,
+signInWithEmailAndPassword,
+onAuthStateChanged,
+signOut
+} = window.firebaseFns;
 
 const authScreen = document.getElementById("authScreen");
 const app = document.getElementById("app");
 const authError = document.getElementById("authError");
-
-const email = document.getElementById("email");
-const password = document.getElementById("password");
 
 document.getElementById("registerBtn").onclick = async () => {
 
