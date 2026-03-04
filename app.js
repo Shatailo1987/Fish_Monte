@@ -40,14 +40,16 @@ function initApp(user) {
 <div id="content"></div>
 `;
 
-document.getElementById("logoutBtn").onclick = () => signOut(auth);
+const content = document.getElementById("content");
+
 document.getElementById("tabSales").onclick =
 () => renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot);
- document.getElementById("tabExpenses").onclick =
+
+document.getElementById("tabExpenses").onclick =
 () => renderExpenses(content);
+
 document.getElementById("tabAnalytics").onclick =
 () => renderAnalytics(content, salesRef, expensesRef, getDocs);
-  const content = document.getElementById("content");
 
   renderSales();
 
