@@ -1,6 +1,6 @@
 export function initAuth(auth, initApp) {
 
-const firebaseFns = window.firebaseFns;
+const firebaseFns = window.firebaseFns || {};
 
 const createUserWithEmailAndPassword = firebaseFns.createUserWithEmailAndPassword;
 const signInWithEmailAndPassword = firebaseFns.signInWithEmailAndPassword;
