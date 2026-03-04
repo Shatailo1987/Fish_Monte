@@ -444,10 +444,11 @@ function renderExpenses() {
         <input id="percentValue" type="number" placeholder="% від продажів">
       `;
 
-      document.getElementById("percentValue").oninput = e => {
-        const percent = Number(e.target.value) || 0;
-        calculatePercent(percent);
-      };
+    document.getElementById("percentValue").oninput = async e => {
+  const percent = Number(e.target.value) || 0;
+  await calculatePercent(percent);
+  updateTotal();
+};
     }
     
     }
