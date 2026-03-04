@@ -640,8 +640,9 @@ details = `
       `;
     });
 
-    totalExpenses.innerText = total;
-    document.getElementById("totalFuel").innerText = totalFuelCompensation;
+  totalExpenses.innerText = total;
+  document.getElementById("totalFuel").innerText = totalFuelCompensation;
+  document.getElementById("totalSalary").innerText = totalSalary;
   });
 
 }
