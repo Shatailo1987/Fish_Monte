@@ -93,6 +93,18 @@ totalKg.innerText =
 weights.reduce((a,b)=>a+b,0);
 
 }
+
+weightsList.onclick = e => {
+
+if(!e.target.classList.contains("removeWeight")) return;
+
+const index = e.target.dataset.index;
+
+weights.splice(index,1);
+
+renderWeights();
+
+};
   
 totalKg.innerText =
 weights.reduce((a,b)=>a+b,0);
