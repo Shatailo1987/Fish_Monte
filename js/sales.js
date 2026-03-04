@@ -274,6 +274,11 @@ ${d.totalKg} кг —
 ${d.totalSum} грн
 </summary>
 
+<div style="margin:6px 0;">
+<button class="editSale" data-id="${d.id}">✏ Редагувати</button>
+<button class="deleteSale" data-id="${d.id}">❌ Видалити</button>
+</div>
+
 ${d.items.map(i => `
 
 <div style="margin-left:10px;">
