@@ -317,7 +317,7 @@ btn.onclick = () => {
 
 const sale = docs.find(s => s.id === btn.dataset.id);
 
-items = sale.items;
+items = JSON.parse(JSON.stringify(sale.items));
 
 renderItems();
 
