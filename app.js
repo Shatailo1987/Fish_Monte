@@ -35,6 +35,8 @@ app.innerHTML = `
 
 const content = document.getElementById("content");
 
+document.getElementById("logoutBtn").onclick = () => signOut(auth);
+
 document.getElementById("tabSales").onclick =
 () => renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot);
 
