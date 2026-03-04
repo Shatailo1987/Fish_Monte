@@ -530,9 +530,10 @@ if (cat === "Зарибок") {
     data.percentValue = Number(document.getElementById("percentValue")?.value) || 0;
   }
 
-  data.fuelCompensation = document.getElementById("fuelCheckbox")?.checked || false;
-  const fuelField = document.getElementById("fuelAmount");
-data.fuelAmount = fuelField ? Number(fuelField.value) : 0;
+ data.fuelCompensation = document.getElementById("fuelCheckbox")?.checked || false;
+
+const fuelField = document.getElementById("fuelAmount");
+data.fuelAmount = data.fuelCompensation && fuelField ? Number(fuelField.value) : 0;
 }
 
       await addDoc(expensesRef, data);
