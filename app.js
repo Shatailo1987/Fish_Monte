@@ -445,6 +445,8 @@ function renderExpenses() {
         calculatePercent(percent);
       };
     }
+    
+    }
 
   renderSalaryInput();
   salaryType.onchange = renderSalaryInput;
@@ -601,4 +603,5 @@ if (cat === "Зарибок") {
   });
 
 }
+  
 } 
