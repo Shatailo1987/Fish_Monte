@@ -305,7 +305,9 @@ btn.onclick = async () => {
 
 if(!confirm("Видалити продаж?")) return;
 
-await deleteDoc(doc(salesRef, btn.dataset.id));
+const saleRef = doc(salesRef, btn.dataset.id);
+  
+await deleteDoc(saleRef);
 
 };
 
