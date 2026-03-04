@@ -68,7 +68,7 @@ function initApp(user) {
   document.getElementById("logoutBtn").onclick = () => signOut(auth);
 document.getElementById("tabSales").onclick =
 () => renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot);
-  document.getElementById("tabExpenses").onclick =
+ document.getElementById("tabExpenses").onclick =
 () => renderExpenses(content);
 
   const content = document.getElementById("content");
