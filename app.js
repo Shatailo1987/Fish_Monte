@@ -24,8 +24,6 @@ const app = document.getElementById("app");
 const authError = document.getElementById("authError");
 
 initAuth(auth, initApp);
-  }
-});
 
 function initApp(user) {
 
