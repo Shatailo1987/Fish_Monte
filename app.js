@@ -535,10 +535,11 @@ if (cat === "Зарибок") {
   };
 
   // ================= SNAPSHOT =================
-  onSnapshot(expensesRef, snap => {
+ onSnapshot(expensesRef, snap => {
 
-    expensesList.innerHTML = "";
-    let totalFuelCompensation = 0;
+  expensesList.innerHTML = "";
+  let totalFuelCompensation = 0;
+  let total = 0;
 
     const docs = [];
     snap.forEach(doc => {
