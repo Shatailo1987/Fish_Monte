@@ -95,6 +95,8 @@ weightInput.value = "";
 
 renderWeights();
 
+weightInput.focus();   // ← додали
+
 };
   
 function renderItems(){
