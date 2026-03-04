@@ -275,7 +275,8 @@ function renderExpenses() {
 
 <div><b>ЗАГАЛЬНІ ВИТРАТИ: <span id="totalExpenses">0</span> грн</b></div>
 
-<div><b>Компенсація пального рибалкам: <span id="totalFuel">0</span> грн</b></div>
+<div><b>Компенсація пального рибалкам: <span id="totalFuel">0</span> грн</b>
+</div>
   `;
 
   const expenseCategory = document.getElementById("expenseCategory");
