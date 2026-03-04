@@ -564,7 +564,9 @@ data.fuelAmount = fuelField ? Number(fuelField.value) : 0;
       let details = "";
 
       if (["Пальне", "Ремонт", "Інше"].includes(d.category)) {
-  details = `Опис: ${d.name || "-"}`;
+  details = `
+    Опис: ${d.name || "-"}<br>
+  `;
 }
 
       if (d.category === "Корм") {
