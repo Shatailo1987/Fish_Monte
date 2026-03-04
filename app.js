@@ -12,12 +12,9 @@ import { renderAnalytics } from "./js/analytics.js";
 
 const auth = window.firebaseAuth;
 const db = window.firebaseDB;
-const {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  onAuthStateChanged,
-  signOut
-} = window.firebaseFns;
+const { signOut } = window.firebaseFns;
+
+const app = document.getElementById("app");
 
 initAuth(auth, initApp);
 
