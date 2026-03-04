@@ -197,6 +197,7 @@ weights = [];
 renderWeights();
 renderItems();
 
+priceInput.value="";
 weightInput.value="";
 weightInput.focus();
 weightInput.select();
