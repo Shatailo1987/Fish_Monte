@@ -3,6 +3,7 @@ export async function renderSales(content, buyersRef, salesRef, getDocs, addDoc,
 let buyers = [];
 let weights = [];
 let items = [];
+let editingSaleId = null;
 
 const buyersSnap = await getDocs(buyersRef);
 buyersSnap.forEach(d => buyers.push(d.data()));
