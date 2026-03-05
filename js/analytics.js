@@ -155,13 +155,13 @@ let expensesSum = 0;
 
 expenses.forEach(e=>{
 expensesSum += e.sum || 0;
-});
 
 const date = new Date(e.date).toLocaleDateString();
 
 if(!profitDaily[date]) profitDaily[date] = 0;
 
 profitDaily[date] -= e.sum || 0;
+});
 
 const profit = salesSum - expensesSum;
 
