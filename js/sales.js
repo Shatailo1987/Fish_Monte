@@ -243,6 +243,8 @@ ${i.weights.join(" + ")}
 
 });
 
+if (backupSales) {
+
 backupSales.onclick = async () => {
 
   const snap = await getDocs(salesRef);
@@ -274,4 +276,5 @@ backupSales.onclick = async () => {
   URL.revokeObjectURL(url);
 
 };
+
 }
