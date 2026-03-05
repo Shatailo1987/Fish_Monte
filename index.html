@@ -78,10 +78,16 @@
     <p id="authError" style="color:red;"></p>
   </div>
 
-  <div id="app" style="display:none;">
-    <h2>Система запущена ✅</h2>
-    <button id="logoutBtn">Вийти</button>
+ <div id="app" style="display:none;">
+
+  <div class="topbar">
+    <div class="logo">🐟 Fish Monte</div>
+    <button id="logoutBtn" class="logout">Вийти</button>
   </div>
+
+  <div id="appContent"></div>
+
+</div>
 
   <!-- Firebase -->
   <script type="module">
