@@ -196,6 +196,9 @@ items=[];
 
 renderItems();
 renderWeights();
+priceInput.value = "";
+weightInput.value = "";
+fishType.selectedIndex = 0;
 
 });
 
