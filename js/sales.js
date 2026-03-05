@@ -215,13 +215,13 @@ salesList.innerHTML += `
 <details style="border:1px solid #999;margin:5px;padding:5px;">
 
 <summary>
-${new Date(d.date).toLocaleDateString()} —
-${d.buyerName} (${d.buyerPhone}) —
-${d.totalKg} кг —
-${d.totalSum} грн
+${new Date(data.date).toLocaleDateString()} —
+${data.buyerName} (${data.buyerPhone}) —
+${data.totalKg} кг —
+${data.totalSum} грн
 </summary>
 
-${d.items.map(i=>`
+${data.items.map(i => `
 
 <div style="margin-left:10px;">
 
