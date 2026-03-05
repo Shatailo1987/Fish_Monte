@@ -199,7 +199,7 @@ totalSum:items.reduce((a,b)=>a+b.sum,0),
 date:new Date().toISOString()
 };
 
-if(editingSaleId){
+if(editingSaleId !== null){
 
 await updateDoc(doc(salesRef, editingSaleId), saleData);
 editingSaleId = null;
