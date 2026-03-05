@@ -237,12 +237,23 @@ ${data.totalSum} грн
 <button onclick="deleteSale('${d.id}')">🗑 Видалити</button>
 </div>
 
+${data.items.map(i => `
+
+<div style="margin-left:10px;">
+
+${i.fish}:
+${i.weights.join(" + ")}
+= ${i.kg} кг
+(наважок: ${i.weights.length})
+
+</div>
+
 `).join("")}
 
 </details>
 `;
 
-  let totalKg = 0;
+let totalKg = 0;
 let totalMoney = 0;
 let count = 0;
 
