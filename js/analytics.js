@@ -235,6 +235,39 @@ tension:0.3
 options:{responsive:true}
 });
 
+/* КГ РИБИ ПО ДНЯХ */
+
+const kgDates = Object.keys(fishKgDaily);
+
+const fishTypes = ["Короп","Амур","Товстолоб","Карась","Щука","Окунь"];
+
+const datasets = fishTypes.map(fish=>{
+return {
+label: fish,
+data: kgDates.map(d=>{
+return fishKgDaily[d][fish] || 0;
+})
+};
+});
+
+const kgCtx = document.getElementById("fishKgDailyChart");
+
+if (window.fishKgDailyChart && typeof window.fishKgDailyChart.destroy === "function") {
+window.fishKgDailyChart.destroy();
+}
+
+window.fishKgDailyChart = new Chart(kgCtx,{
+type:"line",
+data:{
+labels:kgDates,
+datasets:datasets
+},
+options:{
+responsive:true,
+interaction:{mode:"index",intersect:false}
+}
+});
+
 }
 
 }
