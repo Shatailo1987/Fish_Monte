@@ -139,6 +139,18 @@ const kg = weights.reduce((a,b)=>a+b,0);
 const price = Number(priceInput.value);
 const fish = fishType.value;
 
+if(editingSaleId){
+
+items[0] = {
+fish,
+weights:[...weights],
+kg,
+price,
+sum:kg*price
+};
+
+}else{
+
 items.push({
 fish,
 weights:[...weights],
@@ -146,6 +158,8 @@ kg,
 price,
 sum:kg*price
 });
+
+}
 
 weights = [];
 
