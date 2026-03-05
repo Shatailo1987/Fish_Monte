@@ -69,6 +69,7 @@ let fishStats = {};
 let daily = {};
 let fishDaily = {};
 let profitDaily = {};
+let fishKgDaily = {};
 
 /* ПРОДАЖІ */
 
