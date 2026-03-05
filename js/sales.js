@@ -213,14 +213,21 @@ fishType.selectedIndex = 0;
 
 });
 
-
 onSnapshot(salesRef,snap=>{
 
 salesList.innerHTML="";
 
+let totalKg = 0;
+let totalMoney = 0;
+let count = 0;
+
 snap.forEach(d=>{
 
 const data = d.data();
+
+totalKg += s.totalKg || 0;
+totalMoney += s.totalSum || 0;
+count++;
 
 salesList.innerHTML += `
 <details style="border:1px solid #999;margin:5px;padding:5px;">
@@ -240,12 +247,10 @@ ${data.totalSum} грн
 ${data.items.map(i => `
 
 <div style="margin-left:10px;">
-
 ${i.fish}:
 ${i.weights.join(" + ")}
 = ${i.kg} кг
 (наважок: ${i.weights.length})
-
 </div>
 
 `).join("")}
@@ -255,17 +260,6 @@ ${i.weights.join(" + ")}
 
 });
 
-let totalKg = 0;
-let totalMoney = 0;
-let count = 0;
-
-snap.forEach(d=>{
-const s = d.data();
-totalKg += s.totalKg || 0;
-totalMoney += s.totalSum || 0;
-count++;
-});
-
 const kgEl = document.getElementById("statKg");
 const moneyEl = document.getElementById("statMoney");
 const salesEl = document.getElementById("statSales");
@@ -273,6 +267,8 @@ const salesEl = document.getElementById("statSales");
 if(kgEl) kgEl.innerText = totalKg;
 if(moneyEl) moneyEl.innerText = totalMoney + " грн";
 if(salesEl) salesEl.innerText = count;
+
+});
 
 window.deleteSale = async function(id){
 
