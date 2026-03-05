@@ -90,6 +90,20 @@ s.items.forEach(i=>{
 if(!fishStats[i.fish]) fishStats[i.fish] = 0;
 fishStats[i.fish] += i.kg;
 
+/* кг по днях */
+
+if(!fishKgDaily[date]){
+fishKgDaily[date] = {};
+}
+
+if(!fishKgDaily[date][i.fish]){
+fishKgDaily[date][i.fish] = 0;
+}
+
+fishKgDaily[date][i.fish] += i.kg;
+
+/* існуючий код */
+
 if(!fishDaily[date]) fishDaily[date] = {};
 
 if(!fishDaily[date][i.fish]){
