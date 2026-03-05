@@ -84,10 +84,10 @@ const backupSales = document.getElementById("backupSales");
 function renderWeights(){
 
 weightsList.innerHTML =
-weights.map(w => `<div>${w} кг</div>`).join("");
+weights.map((w,i) => `<div>${i+1}. ${w} кг</div>`).join("");
 
 totalKg.innerText =
-weights.reduce((a,b)=>a+b,0);
+weights.length ? weights.reduce((a,b)=>a+b,0) : 0;
 
 }
 
@@ -102,6 +102,8 @@ weights.push(w);
 weightInput.value = "";
 
 renderWeights();
+
+weightInput.focus();
 
 };
   
