@@ -1,4 +1,4 @@
-export async function renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot) {
+export async function renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot, deleteDoc, doc, updateDoc) {
 
 let buyers = [];
 let weights = [];
