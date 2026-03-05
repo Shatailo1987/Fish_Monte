@@ -157,6 +157,12 @@ expenses.forEach(e=>{
 expensesSum += e.sum || 0;
 });
 
+const date = new Date(e.date).toLocaleDateString();
+
+if(!profitDaily[date]) profitDaily[date] = 0;
+
+profitDaily[date] -= e.sum || 0;
+
 const profit = salesSum - expensesSum;
 
 document.getElementById("statSalesSum").innerText = salesSum + " грн";
