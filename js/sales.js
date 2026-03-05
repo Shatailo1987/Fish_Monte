@@ -296,27 +296,27 @@ if(d.id === id){
 
 const data = d.data();
 
+/* завантажуємо всі позиції */
 items = data.items || [];
 
-if(items.length){
+/* очищаємо форму */
+weights = [];
+priceInput.value = "";
+renderWeights();
+renderItems();
 
-weights = [...items[0].weights];
+/* показуємо першу рибу для редагування */
+if(items.length){
 
 fishType.value = items[0].fish;
 priceInput.value = items[0].price;
+weights = [...items[0].weights];
 
-}else{
-
-weights = [];
-
-}
-
-renderItems();
 renderWeights();
 
 }
+
 });
 
 };
 }
-  
