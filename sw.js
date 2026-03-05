@@ -1,4 +1,4 @@
-const CACHE_NAME = "fish-monte-v20";
+const CACHE_NAME = "fishmonte-v1.0";
 
 const urlsToCache = [
   "./",
