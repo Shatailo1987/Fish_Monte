@@ -213,6 +213,7 @@ const data = d.data();
 
 salesList.innerHTML += `
 <details style="border:1px solid #999;margin:5px;padding:5px;">
+
 <summary>
 ${new Date(data.date).toLocaleDateString()} —
 ${data.buyerName} (${data.buyerPhone}) —
@@ -220,10 +221,11 @@ ${data.totalKg} кг —
 ${data.totalSum} грн
 </summary>
 
-${data.items.map(i=>`
-<div style="margin-left:10px;">
-${i.fish}: ${i.kg} кг
+<div style="margin:5px 0;">
+<button onclick="editSale('${d.id}')">✏️ Редагувати</button>
+<button onclick="deleteSale('${d.id}')">🗑 Видалити</button>
 </div>
+
 `).join("")}
 
 </details>
