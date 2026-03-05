@@ -236,4 +236,36 @@ const totalSum = document.getElementById("totalSum");
 const saveSale = document.getElementById("saveSale");
 const salesList = document.getElementById("salesList");
 const backupSales = document.getElementById("backupSales");
+
+backupSales.onclick = async () => {
+
+  const snap = await getDocs(salesRef);
+
+  const data = [];
+
+  snap.forEach(d => {
+    data.push({
+      id: d.id,
+      ...d.data()
+    });
+  });
+
+  const json = JSON.stringify(data, null, 2);
+
+  const blob = new Blob([json], { type: "application/json" });
+
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+
+  const date = new Date().toISOString().slice(0,10);
+
+  a.href = url;
+  a.download = `sales_backup_${date}.json`;
+
+  a.click();
+
+  URL.revokeObjectURL(url);
+
+};
 }
