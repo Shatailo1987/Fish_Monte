@@ -280,22 +280,3 @@ await deleteDoc(doc(salesRef, id));
 }
   
 window.editSale = async function(id){
-
-editingSaleId = id;
-
-const snap = await getDocs(salesRef);
-
-snap.forEach(d=>{
-if(d.id === id){
-
-const data = d.data();
-
-items = data.items;
-
-renderItems();
-
-}
-});
-
-};
-}
