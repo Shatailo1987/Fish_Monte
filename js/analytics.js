@@ -1,60 +1,51 @@
-export async function renderAnalytics(content, salesRef, expensesRef, getDocs) {
+export async function renderAnalytics(content, salesRef, expensesRef, getDocs){
 
 content.innerHTML = `
-<h2>Аналітика господарства</h2>
+<h2>Аналітика</h2>
 
-<div style="border:1px solid #ccc;padding:10px;margin:5px;">
-💰 Виручка: <b id="income">0</b> грн
-</div>
-
-<div style="border:1px solid #ccc;padding:10px;margin:5px;">
-📉 Витрати: <b id="expenses">0</b> грн
-</div>
-
-<div style="border:1px solid #ccc;padding:10px;margin:5px;">
-📈 Прибуток: <b id="profit">0</b> грн
-</div>
-
-<div style="border:1px solid #ccc;padding:10px;margin:5px;">
-🐟 Продано риби: <b id="soldKg">0</b> кг
-</div>
-
-<div style="border:1px solid #ccc;padding:10px;margin:5px;">
-💲 Середня ціна кг: <b id="avgPrice">0</b> грн
-</div>
+<canvas id="salesChart" height="120"></canvas>
 `;
 
-let income = 0;
-let expenses = 0;
-let soldKg = 0;
+const snap = await getDocs(salesRef);
 
-const salesSnap = await getDocs(salesRef);
+const daily = {};
 
-salesSnap.forEach(doc => {
+snap.forEach(d => {
 
-const d = doc.data();
+const s = d.data();
 
-income += d.totalSum || 0;
-soldKg += d.totalKg || 0;
+const date = new Date(s.date).toLocaleDateString();
 
-});
+if(!daily[date]) daily[date] = 0;
 
-const expensesSnap = await getDocs(expensesRef);
-
-expensesSnap.forEach(doc => {
-
-const d = doc.data();
-expenses += d.sum || 0;
+daily[date] += s.totalSum || 0;
 
 });
 
-const profit = income - expenses;
-const avgPrice = soldKg ? Math.round(income / soldKg) : 0;
+const labels = Object.keys(daily);
+const data = Object.values(daily);
 
-document.getElementById("income").innerText = income;
-document.getElementById("expenses").innerText = expenses;
-document.getElementById("profit").innerText = profit;
-document.getElementById("soldKg").innerText = soldKg;
-document.getElementById("avgPrice").innerText = avgPrice;
+const ctx = document.getElementById("salesChart");
+
+new Chart(ctx, {
+type: "line",
+data: {
+labels: labels,
+datasets: [{
+label: "Виручка (грн)",
+data: data,
+borderWidth: 3,
+tension: 0.3
+}]
+},
+options:{
+responsive:true,
+plugins:{
+legend:{
+display:true
+}
+}
+}
+});
 
 }
