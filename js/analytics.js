@@ -108,44 +108,41 @@ return true;
 }
 
 let salesSum = 0;
+let expensesSum = 0;
+
 let fishStats = {};
 let daily = {};
 let fishDaily = {};
 let profitDaily = {};
 
+/* --- ПРОДАЖІ --- */
+
 sales.forEach(s=>{
-
-const date = new Date(s.date).toLocaleDateString();
-
-if(!profitDaily[date]) profitDaily[date] = 0;
-
-profitDaily[date] += s.totalSum || 0;
-
-});
-
-expenses.forEach(e=>{
-
-const date = new Date(e.date).toLocaleDateString();
-
-if(!profitDaily[date]) profitDaily[date] = 0;
-
-profitDaily[date] -= e.sum || 0;
-
-});
 
 salesSum += s.totalSum || 0;
 
 const date = new Date(s.date).toLocaleDateString();
 
-if(!fishDaily[date]) fishDaily[date] = {};
+/* виручка по днях */
+if(!daily[date]) daily[date] = 0;
+daily[date] += s.totalSum || 0;
 
+/* прибуток по днях */
+if(!profitDaily[date]) profitDaily[date] = 0;
+profitDaily[date] += s.totalSum || 0;
+
+/* продажі по рибі */
 s.items.forEach(i=>{
 
+if(!fishStats[i.fish]) fishStats[i.fish] = 0;
+fishStats[i.fish] += i.kg;
+
+/* продажі риби по днях */
+
+if(!fishDaily[date]) fishDaily[date] = {};
+
 if(!fishDaily[date][i.fish]){
-fishDaily[date][i.fish] = {
-kg:0,
-sum:0
-};
+fishDaily[date][i.fish] = {kg:0,sum:0};
 }
 
 fishDaily[date][i.fish].kg += i.kg;
@@ -153,31 +150,29 @@ fishDaily[date][i.fish].sum += i.sum;
 
 });
 
+});
+
+/* --- ВИТРАТИ --- */
+
+expenses.forEach(e=>{
+
+expensesSum += e.sum || 0;
+
+const date = new Date(e.date).toLocaleDateString();
+
 if(!profitDaily[date]) profitDaily[date] = 0;
-profitDaily[date] += s.totalSum || 0;
-
-if(!daily[date]) daily[date] = 0;
-daily[date] += s.totalSum || 0;
-
-s.items.forEach(i=>{
-
-if(!fishStats[i.fish]) fishStats[i.fish] = 0;
-
-fishStats[i.fish] += i.kg;
+profitDaily[date] -= e.sum || 0;
 
 });
-
-});
-
-let expensesSum = 0;
 
 const profit = salesSum - expensesSum;
+
+/* --- ВИВІД КАРТОК --- */
 
 document.getElementById("statSalesSum").innerText = salesSum + " грн";
 document.getElementById("statExpensesSum").innerText = expensesSum + " грн";
 document.getElementById("statProfit").innerText = profit + " грн";
-
-
+  
 const fishLabels = Object.keys(fishStats);
 const fishData = Object.values(fishStats);
 
