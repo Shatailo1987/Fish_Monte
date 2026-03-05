@@ -91,7 +91,7 @@ weights.reduce((a,b)=>a+b,0);
 
 }
 
-addWeight.onclick = () => {
+addWeightBtn.onclick = () => {
 
 const w = Number(weightInput.value);
 
