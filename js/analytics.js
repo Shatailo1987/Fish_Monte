@@ -44,7 +44,6 @@ content.innerHTML = `
 `;
 
 const filter = document.getElementById("periodFilter");
-
 filter.addEventListener("change", loadData);
 
 loadData();
@@ -54,58 +53,11 @@ async function loadData(){
 const salesSnap = await getDocs(salesRef);
 const expSnap = await getDocs(expensesRef);
 
-const now = new Date();
-
 let sales = [];
 let expenses = [];
 
-salesSnap.forEach(d=>{
-sales.push(d.data());
-});
-
-expSnap.forEach(d=>{
-expenses.push(d.data());
-});
-
-if(filter.value !== "all"){
-
-sales = sales.filter(s=>{
-const date = new Date(s.date);
-return checkPeriod(date);
-});
-
-expenses = expenses.filter(e=>{
-const date = new Date(e.date);
-return checkPeriod(date);
-});
-
-}
-
-function checkPeriod(date){
-
-if(filter.value==="today"){
-
-return date.toDateString() === now.toDateString();
-
-}
-
-if(filter.value==="week"){
-
-const diff = (now-date)/(1000*60*60*24);
-return diff <= 7;
-
-}
-
-if(filter.value==="month"){
-
-const diff = (now-date)/(1000*60*60*24);
-return diff <= 30;
-
-}
-
-return true;
-
-}
+salesSnap.forEach(d=>sales.push(d.data()));
+expSnap.forEach(d=>expenses.push(d.data()));
 
 let salesSum = 0;
 let expensesSum = 0;
@@ -115,7 +67,7 @@ let daily = {};
 let fishDaily = {};
 let profitDaily = {};
 
-/* --- ПРОДАЖІ --- */
+/* ПРОДАЖІ */
 
 sales.forEach(s=>{
 
@@ -123,21 +75,16 @@ salesSum += s.totalSum || 0;
 
 const date = new Date(s.date).toLocaleDateString();
 
-/* виручка по днях */
 if(!daily[date]) daily[date] = 0;
 daily[date] += s.totalSum || 0;
 
-/* прибуток по днях */
 if(!profitDaily[date]) profitDaily[date] = 0;
 profitDaily[date] += s.totalSum || 0;
 
-/* продажі по рибі */
 s.items.forEach(i=>{
 
 if(!fishStats[i.fish]) fishStats[i.fish] = 0;
 fishStats[i.fish] += i.kg;
-
-/* продажі риби по днях */
 
 if(!fishDaily[date]) fishDaily[date] = {};
 
@@ -152,7 +99,7 @@ fishDaily[date][i.fish].sum += i.sum;
 
 });
 
-/* --- ВИТРАТИ --- */
+/* ВИТРАТИ */
 
 expenses.forEach(e=>{
 
@@ -167,77 +114,18 @@ profitDaily[date] -= e.sum || 0;
 
 const profit = salesSum - expensesSum;
 
-/* --- ВИВІД КАРТОК --- */
-
 document.getElementById("statSalesSum").innerText = salesSum + " грн";
 document.getElementById("statExpensesSum").innerText = expensesSum + " грн";
 document.getElementById("statProfit").innerText = profit + " грн";
-  
+
+/* ГРАФІК РИБИ */
+
 const fishLabels = Object.keys(fishStats);
 const fishData = Object.values(fishStats);
 
 const fishCtx = document.getElementById("fishChart");
 
-if(window.fishChart && typeof window.fishChart.destroy === "function"){
-window.fishChart.destroy();
-}
-
-const fishDates = Object.keys(fishDaily);
-
-const fishMoney = fishDates.map(d=>{
-
-let total = 0;
-
-Object.values(fishDaily[d]).forEach(f=>{
-total += f.sum;
-});
-
-return total;
-
-});
-
-const fishDailyCtx = document.getElementById("fishDailyChart");
-
-if(window.fishDailyChart && typeof window.fishDailyChart.destroy === "function"){
-window.fishDailyChart.destroy();
-}
-
-window.fishDailyChart = new Chart(fishDailyCtx,{
-type:"bar",
-data:{
-labels:fishDates,
-datasets:[{
-label:"Продажі риби (грн)",
-data:fishMoney
-}]
-},
-options:{responsive:true}
-});
-
-  const profitLabels = Object.keys(profitDaily);
-const profitData = Object.values(profitDaily);
-
-const profitCtx = document.getElementById("profitDailyChart");
-
-if(window.profitDailyChart && typeof window.profitDailyChart.destroy === "function"){
-window.profitDailyChart.destroy();
-}
-
-window.profitDailyChart = new Chart(profitCtx,{
-type:"line",
-data:{
-labels:profitLabels,
-datasets:[{
-label:"Прибуток (грн)",
-data:profitData,
-borderWidth:3,
-tension:0.3
-}]
-},
-options:{responsive:true}
-});
-  
-}
+if(window.fishChart) window.fishChart.destroy();
 
 window.fishChart = new Chart(fishCtx,{
 type:"bar",
@@ -251,15 +139,14 @@ data:fishData
 options:{responsive:true}
 });
 
+/* ВИРУЧКА */
 
 const labels = Object.keys(daily);
 const data = Object.values(daily);
 
 const salesCtx = document.getElementById("salesChart");
 
-if(window.salesChart && typeof window.salesChart.destroy === "function"){
-window.salesChart.destroy();
-}
+if(window.salesChart) window.salesChart.destroy();
 
 window.salesChart = new Chart(salesCtx,{
 type:"line",
@@ -268,6 +155,55 @@ labels:labels,
 datasets:[{
 label:"Виручка",
 data:data,
+borderWidth:3,
+tension:0.3
+}]
+},
+options:{responsive:true}
+});
+
+/* ПРОДАЖІ РИБИ ПО ДНЯХ */
+
+const fishDates = Object.keys(fishDaily);
+
+const fishMoney = fishDates.map(d=>{
+let total = 0;
+Object.values(fishDaily[d]).forEach(f=>total += f.sum);
+return total;
+});
+
+const fishDailyCtx = document.getElementById("fishDailyChart");
+
+if(window.fishDailyChart) window.fishDailyChart.destroy();
+
+window.fishDailyChart = new Chart(fishDailyCtx,{
+type:"bar",
+data:{
+labels:fishDates,
+datasets:[{
+label:"Продажі риби (грн)",
+data:fishMoney
+}]
+},
+options:{responsive:true}
+});
+
+/* ПРИБУТОК */
+
+const profitLabels = Object.keys(profitDaily);
+const profitData = Object.values(profitDaily);
+
+const profitCtx = document.getElementById("profitDailyChart");
+
+if(window.profitDailyChart) window.profitDailyChart.destroy();
+
+window.profitDailyChart = new Chart(profitCtx,{
+type:"line",
+data:{
+labels:profitLabels,
+datasets:[{
+label:"Прибуток (грн)",
+data:profitData,
 borderWidth:3,
 tension:0.3
 }]
