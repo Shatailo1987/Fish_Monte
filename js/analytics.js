@@ -196,7 +196,9 @@ return total;
 
 const fishDailyCtx = document.getElementById("fishDailyChart");
 
-if(window.fishDailyChart) window.fishDailyChart.destroy();
+if (window.fishDailyChart && typeof window.fishDailyChart.destroy === "function") {
+window.fishDailyChart.destroy();
+}
 
 window.fishDailyChart = new Chart(fishDailyCtx,{
 type:"bar",
