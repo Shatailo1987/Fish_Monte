@@ -58,6 +58,29 @@ ${b.name} (${b.phone})
 <h3>Історія</h3>
 <div id="salesList"></div>
 `;
+
+const buyerSelect = document.getElementById("buyerSelect");
+const newName = document.getElementById("newName");
+const newPhone = document.getElementById("newPhone");
+
+const fishType = document.getElementById("fishType");
+const weightInput = document.getElementById("weightInput");
+const addWeight = document.getElementById("addWeight");
+
+const weightsList = document.getElementById("weightsList");
+const totalKg = document.getElementById("totalKg");
+
+const priceInput = document.getElementById("priceInput");
+const addFish = document.getElementById("addFish");
+
+const itemsList = document.getElementById("itemsList");
+const totalSum = document.getElementById("totalSum");
+
+const saveSale = document.getElementById("saveSale");
+const salesList = document.getElementById("salesList");
+
+const backupSales = document.getElementById("backupSales");
+  
 function renderWeights(){
 
 weightsList.innerHTML =
@@ -217,27 +240,6 @@ ${i.weights.join(" + ")}
 });
 
 });
-  
-const buyerSelect = document.getElementById("buyerSelect");
-const newName = document.getElementById("newName");
-const newPhone = document.getElementById("newPhone");
-
-const fishType = document.getElementById("fishType");
-const weightInput = document.getElementById("weightInput");
-const addWeight = document.getElementById("addWeight");
-
-const weightsList = document.getElementById("weightsList");
-const totalKg = document.getElementById("totalKg");
-
-const priceInput = document.getElementById("priceInput");
-const addFish = document.getElementById("addFish");
-
-const itemsList = document.getElementById("itemsList");
-const totalSum = document.getElementById("totalSum");
-
-const saveSale = document.getElementById("saveSale");
-const salesList = document.getElementById("salesList");
-const backupSales = document.getElementById("backupSales");
 
 backupSales.onclick = async () => {
 
