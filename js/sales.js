@@ -292,14 +292,11 @@ editingSaleId = id;
 const snap = await getDocs(salesRef);
 
 snap.forEach(d=>{
-
 if(d.id === id){
 
 const data = d.data();
 
 items = data.items || [];
-
-/* беремо наважки першої риби */
 
 if(items.length){
 
@@ -322,3 +319,4 @@ renderWeights();
 
 };
 }
+  
