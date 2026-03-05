@@ -11,7 +11,9 @@ buyersSnap.forEach(d => buyers.push(d.data()));
 content.innerHTML = `
 <h2>Продаж</h2>
 
-<button id="backupSales">Зробити резервну копію продажів</button>
+<button id="backupSales" style="margin-bottom:10px;">
+💾 Резервна копія продажів
+</button>
 
 <select id="buyerSelect">
 <option value="">-- Обрати покупця --</option>
