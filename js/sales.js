@@ -253,6 +253,8 @@ ${i.weights.join(" + ")}
 </details>
 `;
 
+});
+
 let totalKg = 0;
 let totalMoney = 0;
 let count = 0;
