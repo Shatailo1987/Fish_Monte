@@ -207,9 +207,9 @@ renderWeights();
 
 salesList.innerHTML="";
 
-snap.forEach(doc=>{
+snap.forEach(d=>{
 
-const d = doc.data();
+const data = d.data();
 
 salesList.innerHTML += `
 <details style="border:1px solid #999;margin:5px;padding:5px;">
