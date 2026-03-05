@@ -153,16 +153,6 @@ fishStats[i.fish] += i.kg;
 
 let expensesSum = 0;
 
-expenses.forEach(e=>{
-expensesSum += e.sum || 0;
-
-const date = new Date(e.date).toLocaleDateString();
-
-if(!profitDaily[date]) profitDaily[date] = 0;
-
-profitDaily[date] -= e.sum || 0;
-});
-
 const profit = salesSum - expensesSum;
 
 document.getElementById("statSalesSum").innerText = salesSum + " грн";
@@ -178,7 +168,7 @@ const fishCtx = document.getElementById("fishChart");
 if(window.fishChart && typeof window.fishChart.destroy === "function"){
 window.fishChart.destroy();
 
-  const fishDates = Object.keys(fishDaily);
+const fishDates = Object.keys(fishDaily);
 
 const fishMoney = fishDates.map(d=>{
 
