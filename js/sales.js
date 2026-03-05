@@ -217,6 +217,25 @@ ${i.fish}: ${i.kg} кг
 </details>
 `;
 
+  let totalKg = 0;
+let totalMoney = 0;
+let count = 0;
+
+snap.forEach(d=>{
+const s = d.data();
+totalKg += s.totalKg || 0;
+totalMoney += s.totalSum || 0;
+count++;
+});
+
+const kgEl = document.getElementById("statKg");
+const moneyEl = document.getElementById("statMoney");
+const salesEl = document.getElementById("statSales");
+
+if(kgEl) kgEl.innerText = totalKg;
+if(moneyEl) moneyEl.innerText = totalMoney + " грн";
+if(salesEl) salesEl.innerText = count;
+  
 });
 
 });
