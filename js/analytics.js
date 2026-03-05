@@ -115,6 +115,24 @@ let profitDaily = {};
 
 sales.forEach(s=>{
 
+const date = new Date(s.date).toLocaleDateString();
+
+if(!profitDaily[date]) profitDaily[date] = 0;
+
+profitDaily[date] += s.totalSum || 0;
+
+});
+
+expenses.forEach(e=>{
+
+const date = new Date(e.date).toLocaleDateString();
+
+if(!profitDaily[date]) profitDaily[date] = 0;
+
+profitDaily[date] -= e.sum || 0;
+
+});
+
 salesSum += s.totalSum || 0;
 
 const date = new Date(s.date).toLocaleDateString();
