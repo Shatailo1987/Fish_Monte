@@ -41,6 +41,9 @@ content.innerHTML = `
 
 <h3>Прибуток по днях</h3>
 <canvas id="profitDailyChart" height="120"></canvas>
+
+<h3>Кг риби по днях</h3>
+<canvas id="fishKgDailyChart" height="120"></canvas>
 `;
 
 const filter = document.getElementById("periodFilter");
