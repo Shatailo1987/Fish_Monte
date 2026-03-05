@@ -177,6 +177,62 @@ const fishCtx = document.getElementById("fishChart");
 
 if(window.fishChart && typeof window.fishChart.destroy === "function"){
 window.fishChart.destroy();
+
+  const fishDates = Object.keys(fishDaily);
+
+const fishMoney = fishDates.map(d=>{
+
+let total = 0;
+
+Object.values(fishDaily[d]).forEach(f=>{
+total += f.sum;
+});
+
+return total;
+
+});
+
+const fishDailyCtx = document.getElementById("fishDailyChart");
+
+if(window.fishDailyChart && typeof window.fishDailyChart.destroy === "function"){
+window.fishDailyChart.destroy();
+}
+
+window.fishDailyChart = new Chart(fishDailyCtx,{
+type:"bar",
+data:{
+labels:fishDates,
+datasets:[{
+label:"Продажі риби (грн)",
+data:fishMoney
+}]
+},
+options:{responsive:true}
+});
+
+  const profitLabels = Object.keys(profitDaily);
+const profitData = Object.values(profitDaily);
+
+const profitCtx = document.getElementById("profitDailyChart");
+
+if(window.profitDailyChart && typeof window.profitDailyChart.destroy === "function"){
+window.profitDailyChart.destroy();
+}
+
+window.profitDailyChart = new Chart(profitCtx,{
+type:"line",
+data:{
+labels:profitLabels,
+datasets:[{
+label:"Прибуток (грн)",
+data:profitData,
+borderWidth:3,
+tension:0.3
+}]
+},
+options:{responsive:true}
+});
+  
 }
 
 window.fishChart = new Chart(fishCtx,{
