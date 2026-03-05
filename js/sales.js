@@ -226,8 +226,8 @@ snap.forEach(d=>{
 
 const data = d.data();
 
-totalKg += s.totalKg || 0;
-totalMoney += s.totalSum || 0;
+totalKg += data.totalKg || 0;
+totalMoney += data.totalSum || 0;
 count++;
 
 salesList.innerHTML += `
