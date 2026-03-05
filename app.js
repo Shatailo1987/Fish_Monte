@@ -25,11 +25,33 @@ const buyersRef = collection(db, "users", user.uid, "buyers");
 const expensesRef = collection(db, "users", user.uid, "expenses");
 
 app.innerHTML = `
+
+<div class="dashboard">
+
+<div class="card stat">
+<div class="statTitle">Кг продано</div>
+<div class="statValue" id="statKg">0</div>
+</div>
+
+<div class="card stat">
+<div class="statTitle">Виручка</div>
+<div class="statValue" id="statMoney">0</div>
+</div>
+
+<div class="card stat">
+<div class="statTitle">Продажів</div>
+<div class="statValue" id="statSales">0</div>
+</div>
+
+</div>
+
+<div class="tabs">
 <button id="tabSales">Продажі</button>
 <button id="tabExpenses">Витрати</button>
 <button id="tabAnalytics">Аналітика</button>
 <button id="logoutBtn">Вийти</button>
-<hr>
+</div>
+
 <div id="content"></div>
 `;
 
@@ -45,6 +67,34 @@ document.getElementById("tabExpenses").onclick =
 
 document.getElementById("tabAnalytics").onclick =
 () => renderAnalytics(content, salesRef, expensesRef, getDocs);
+
+
+onSnapshot(salesRef, snap => {
+
+let totalKg = 0;
+let totalMoney = 0;
+let count = 0;
+
+snap.forEach(d => {
+
+const s = d.data();
+
+totalKg += s.totalKg || 0;
+totalMoney += s.totalSum || 0;
+count++;
+
+});
+
+const kgEl = document.getElementById("statKg");
+const moneyEl = document.getElementById("statMoney");
+const salesEl = document.getElementById("statSales");
+
+if(kgEl) kgEl.innerText = totalKg;
+if(moneyEl) moneyEl.innerText = totalMoney + " грн";
+if(salesEl) salesEl.innerText = count;
+
+});
+
 
 renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot);
 
