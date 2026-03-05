@@ -142,7 +142,9 @@ const fishData = Object.values(fishStats);
 
 const fishCtx = document.getElementById("fishChart");
 
-if(window.fishChart) window.fishChart.destroy();
+if(window.fishChart && typeof window.fishChart.destroy === "function"){
+window.fishChart.destroy();
+}
 
 window.fishChart = new Chart(fishCtx,{
 type:"bar",
