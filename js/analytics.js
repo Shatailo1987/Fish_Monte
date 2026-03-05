@@ -148,7 +148,9 @@ const data = Object.values(daily);
 
 const salesCtx = document.getElementById("salesChart");
 
-if(window.salesChart) window.salesChart.destroy();
+if (window.fishDailyChart && typeof window.fishDailyChart.destroy === "function") {
+window.fishDailyChart.destroy();
+}
 
 window.salesChart = new Chart(salesCtx,{
 type:"line",
