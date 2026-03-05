@@ -99,6 +99,6 @@ if(salesEl) salesEl.innerText = count;
 });
 
 
-renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot);
+renderSales(content, buyersRef, salesRef, getDocs, addDoc, onSnapshot, deleteDoc, doc, updateDoc);
 
 }
