@@ -65,7 +65,7 @@ const newPhone = document.getElementById("newPhone");
 
 const fishType = document.getElementById("fishType");
 const weightInput = document.getElementById("weightInput");
-const addWeightBtn = document.getElementById("addWeightBtn");
+const addWeightBtn = document.getElementById("addWeight");
 
 const weightsList = document.getElementById("weightsList");
 const totalKg = document.getElementById("totalKg");
