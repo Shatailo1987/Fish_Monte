@@ -199,7 +199,9 @@ const profitData = Object.values(profitDaily);
 
 const profitCtx = document.getElementById("profitDailyChart");
 
-if(window.profitDailyChart) window.profitDailyChart.destroy();
+if (window.profitDailyChart && typeof window.profitDailyChart.destroy === "function") {
+window.profitDailyChart.destroy();
+}
 
 window.profitDailyChart = new Chart(profitCtx,{
 type:"line",
