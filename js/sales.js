@@ -235,4 +235,5 @@ const totalSum = document.getElementById("totalSum");
 
 const saveSale = document.getElementById("saveSale");
 const salesList = document.getElementById("salesList");
+const backupSales = document.getElementById("backupSales");
 }
