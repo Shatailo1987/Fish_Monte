@@ -11,6 +11,8 @@ buyersSnap.forEach(d => buyers.push(d.data()));
 content.innerHTML = `
 <h2>Продаж</h2>
 
+<button id="backupSales">Зробити резервну копію продажів</button>
+
 <select id="buyerSelect">
 <option value="">-- Обрати покупця --</option>
 ${buyers.map(b =>
