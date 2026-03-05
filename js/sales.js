@@ -183,14 +183,25 @@ buyerPhone=newPhoneVal;
 
 }
 
-await addDoc(salesRef,{
+const saleData = {
 buyerName,
 buyerPhone,
 items,
 totalKg:items.reduce((a,b)=>a+b.kg,0),
 totalSum:items.reduce((a,b)=>a+b.sum,0),
 date:new Date().toISOString()
-});
+};
+
+if(editingSaleId){
+
+await updateDoc(doc(salesRef, editingSaleId), saleData);
+editingSaleId = null;
+
+}else{
+
+await addDoc(salesRef, saleData);
+
+}
 
 items=[];
 
