@@ -180,6 +180,7 @@ const fishCtx = document.getElementById("fishChart");
 
 if(window.fishChart && typeof window.fishChart.destroy === "function"){
 window.fishChart.destroy();
+}
 
 const fishDates = Object.keys(fishDaily);
 
