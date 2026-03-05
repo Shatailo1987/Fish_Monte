@@ -164,7 +164,9 @@ const data = Object.values(daily);
 
 const salesCtx = document.getElementById("salesChart");
 
-if(window.salesChart) window.salesChart.destroy();
+if(window.salesChart && typeof window.salesChart.destroy === "function"){
+window.salesChart.destroy();
+}
 
 window.salesChart = new Chart(salesCtx,{
 type:"line",
