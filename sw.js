@@ -1,10 +1,16 @@
-const CACHE_NAME = "fishmonte-v1.1";
+const CACHE_NAME = "fishmonte-v1.2";
 
 const urlsToCache = [
   "./",
   "./index.html",
   "./style.css",
   "./app.js",
+
+  "./js/sales.js",
+  "./js/auth.js",
+  "./js/expenses.js",
+  "./js/analytics.js",
+
   "./manifest.json",
   "./icons/icon-192.png",
   "./icons/icon-512.png"
@@ -12,6 +18,7 @@ const urlsToCache = [
 
 self.addEventListener("install", event => {
   self.skipWaiting();
+
   event.waitUntil(
     caches.open(CACHE_NAME)
       .then(cache => cache.addAll(urlsToCache))
@@ -30,12 +37,15 @@ self.addEventListener("activate", event => {
       );
     })
   );
+
   return self.clients.claim();
 });
 
 self.addEventListener("fetch", event => {
+
   event.respondWith(
-    caches.match(event.request)
-      .then(response => response || fetch(event.request))
+    fetch(event.request)
+      .catch(() => caches.match(event.request))
   );
+
 });
