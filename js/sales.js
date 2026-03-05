@@ -329,7 +329,6 @@ weights = [...items[0].weights];
 renderWeights();
 
 }
-
 });
 
 };
