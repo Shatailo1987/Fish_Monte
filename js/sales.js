@@ -76,15 +76,21 @@ const salesList = document.getElementById("salesList");
 function renderWeights(){
 
 weightsList.innerHTML =
-weights.map((w,i) => `
+weights.map((w,i)=>`
 <div>
-${i+1}. ${w} кг 
-<button onclick="removeWeight(${i})">❌</button>
+${fishType.value}
+
+<input 
+type="number"
+value="${w}"
+style="width:80px"
+onchange="updateWeight(${i}, this.value)"
+> кг
 </div>
 `).join("");
 
-window.removeWeight = function(index){
-weights.splice(index,1);
+window.updateWeight = function(index,value){
+weights[index] = Number(value);
 renderWeights();
 }
 
