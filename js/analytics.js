@@ -35,6 +35,12 @@ content.innerHTML = `
 
 <h3>Виручка по днях</h3>
 <canvas id="salesChart" height="120"></canvas>
+
+<h3>Продажі риби по днях</h3>
+<canvas id="fishDailyChart" height="120"></canvas>
+
+<h3>Прибуток по днях</h3>
+<canvas id="profitDailyChart" height="120"></canvas>
 `;
 
 const filter = document.getElementById("periodFilter");
@@ -104,12 +110,33 @@ return true;
 let salesSum = 0;
 let fishStats = {};
 let daily = {};
+let fishDaily = {};
+let profitDaily = {};
 
 sales.forEach(s=>{
 
 salesSum += s.totalSum || 0;
 
 const date = new Date(s.date).toLocaleDateString();
+
+if(!fishDaily[date]) fishDaily[date] = {};
+
+s.items.forEach(i=>{
+
+if(!fishDaily[date][i.fish]){
+fishDaily[date][i.fish] = {
+kg:0,
+sum:0
+};
+}
+
+fishDaily[date][i.fish].kg += i.kg;
+fishDaily[date][i.fish].sum += i.sum;
+
+});
+
+if(!profitDaily[date]) profitDaily[date] = 0;
+profitDaily[date] += s.totalSum || 0;
 
 if(!daily[date]) daily[date] = 0;
 daily[date] += s.totalSum || 0;
