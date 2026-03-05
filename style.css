@@ -84,3 +84,31 @@ summary {
   margin-top: 5px;
   border-radius: 6px;
 }
+
+/* dashboard */
+
+.dashboard{
+display:grid;
+grid-template-columns: repeat(auto-fit,minmax(150px,1fr));
+gap:15px;
+margin-bottom:20px;
+}
+
+.card{
+background:white;
+border-radius:12px;
+padding:15px;
+box-shadow:0 3px 10px rgba(0,0,0,0.06);
+}
+
+.statTitle{
+font-size:13px;
+color:#777;
+}
+
+.statValue{
+font-size:26px;
+font-weight:600;
+margin-top:5px;
+color:#0f6bff;
+}
