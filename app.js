@@ -89,6 +89,8 @@ onSnapshot(salesRef, snap => {
 let totalKg = 0;
 let totalMoney = 0;
 let count = 0;
+  
+let fishStats = {};
 
 snap.forEach(d => {
 
