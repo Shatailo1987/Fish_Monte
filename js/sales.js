@@ -49,7 +49,20 @@ ${buyers.map(b => `<option value="${b.phone}">${b.name} (${b.phone})</option>`).
 <button id="saveSale">Зберегти продаж</button>
 
 <hr>
-<h3>Історія</h3>
+<h3>Історія продажів</h3>
+
+<div style="margin-bottom:10px">
+
+З:
+<input type="date" id="dateFrom">
+
+По:
+<input type="date" id="dateTo">
+
+<button id="filterSales">Фільтр</button>
+
+</div>
+
 <div id="salesList"></div>
 `;
 
