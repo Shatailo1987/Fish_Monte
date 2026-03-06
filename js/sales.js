@@ -118,11 +118,18 @@ renderWeights();
 
 function renderItems(){
 
-itemsList.innerHTML = items.map(i => `
-<div style="border:1px solid #ccc;padding:6px;margin:4px 0;">
+itemsList.innerHTML = items.map((i,index) => `
+<div 
+style="border:1px solid #ccc;padding:6px;margin:4px 0;cursor:pointer"
+onclick="selectItem(${index})"
+>
+
 <b>${i.fish}</b><br>
+
 ${i.weights.join(" + ")} = ${i.kg} кг<br>
+
 ${i.kg} × ${i.price} = ${i.sum} грн
+
 </div>
 `).join("");
 
@@ -130,7 +137,6 @@ totalSum.innerText =
 items.reduce((a,b)=>a+b.sum,0);
 
 }
-
 
 addFishBtn.addEventListener("click", () => {
 
