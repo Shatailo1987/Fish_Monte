@@ -100,6 +100,22 @@ totalKg += s.totalKg || 0;
 totalMoney += s.totalSum || 0;
 count++;
 
+/* рахуємо рибу */
+
+if(s.items){
+
+s.items.forEach(i=>{
+
+if(!fishStats[i.fish]){
+fishStats[i.fish] = 0;
+}
+
+fishStats[i.fish] += i.kg;
+
+});
+
+}
+
 });
 
 const kgEl = document.getElementById("statKg");
