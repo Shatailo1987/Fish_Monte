@@ -343,6 +343,10 @@ renderSalesHistory();
 
 });
 
+renderBuyersRating();
+
+});
+
 function renderSalesHistory(){
 
 salesList.innerHTML = "";
