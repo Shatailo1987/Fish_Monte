@@ -339,6 +339,11 @@ ${data.totalKg} кг —
 ${data.totalSum} грн
 </summary>
 
+<div style="margin:5px 0;">
+<button onclick="editSale('${data.id}')">✏️ Редагувати</button>
+<button onclick="deleteSale('${data.id}')">🗑 Видалити</button>
+</div>
+
 ${data.items.map(i => `
 
 <div style="margin-left:10px;border-top:1px dashed #ccc;padding-top:4px">
