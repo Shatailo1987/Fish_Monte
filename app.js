@@ -101,6 +101,7 @@ let totalMoney = 0;
 let count = 0;
   
 let fishStats = {};
+let buyerStats = {};
 
 snap.forEach(d => {
 
