@@ -89,6 +89,15 @@ fishType.addEventListener("change",()=>{
 priceInput.value = fishPrices[fishType.value] || "";
 });
 
+const fishPrices = {
+"Короп":120,
+"Амур":110,
+"Товстолоб":90,
+"Карась":80,
+"Щука":150,
+"Окунь":130
+};
+
 const fishColors = {
 "Короп":"#d1f2eb",
 "Амур":"#d6eaf8",
