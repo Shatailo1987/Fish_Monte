@@ -346,19 +346,36 @@ ${data.totalSum} грн
 
 ${data.items.map(i => `
 
-<div style="margin-left:10px;border-top:1px dashed #ccc;padding-top:4px">
+<div style="
+margin:10px 0;
+padding:10px;
+border:1px solid #ddd;
+border-radius:8px;
+background:#f9f9f9;
+">
 
-<b>${i.fish}</b><br>
+<div style="
+font-weight:bold;
+font-size:16px;
+margin-bottom:6px;
+color:#2c3e50;
+">
+🐟 ${i.fish}
+</div>
 
-Наважки: ${i.weights.join(" + ")} кг<br>
+<div style="margin-left:5px">
 
-Кількість наважок: ${i.weights.length}<br>
+<b>Наважки:</b> ${i.weights.join(" + ")} кг<br>
 
-Разом: ${i.kg} кг<br>
+<b>Кількість наважок:</b> ${i.weights.length}<br>
 
-Ціна: ${i.price} грн/кг<br>
+<b>Разом:</b> ${i.kg} кг<br>
 
-Сума: ${i.sum} грн
+<b>Ціна:</b> ${i.price} грн/кг<br>
+
+<b>Сума:</b> ${i.sum} грн
+
+</div>
 
 </div>
 
