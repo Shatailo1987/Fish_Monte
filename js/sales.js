@@ -369,16 +369,6 @@ ${data.items.map(i => `
 
 }
 
-const kgEl = document.getElementById("statKg");
-const moneyEl = document.getElementById("statMoney");
-const salesEl = document.getElementById("statSales");
-
-if(kgEl) kgEl.innerText = totalKg;
-if(moneyEl) moneyEl.innerText = totalMoney + " грн";
-if(salesEl) salesEl.innerText = count;
-
-});
-
 window.deleteSale = async function(id){
 
 if(!confirm("Видалити цей продаж?")) return;
