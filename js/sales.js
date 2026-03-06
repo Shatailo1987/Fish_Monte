@@ -413,6 +413,48 @@ color:#2c3e50;
 
 }
 
+function renderBuyersRating(){
+
+const rating = {};
+
+allSales.forEach(s=>{
+
+if(!rating[s.buyerName]){
+rating[s.buyerName]={kg:0,sum:0};
+}
+
+rating[s.buyerName].kg += s.totalKg;
+rating[s.buyerName].sum += s.totalSum;
+
+});
+
+const list = Object.entries(rating)
+.sort((a,b)=>b[1].sum-a[1].sum);
+
+const ratingDiv = document.getElementById("buyersRating");
+
+ratingDiv.innerHTML = list.map(([name,data])=>`
+
+<div style="
+border:1px solid #ddd;
+padding:8px;
+margin:6px 0;
+border-radius:6px;
+background:#f4f6f7;
+">
+
+<b>${name}</b><br>
+
+⚖️ ${data.kg} кг<br>
+
+💰 ${data.sum} грн
+
+</div>
+
+`).join("");
+
+}
+
 window.deleteSale = async function(id){
 
 if(!confirm("Видалити цей продаж?")) return;
