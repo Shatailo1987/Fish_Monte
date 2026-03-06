@@ -502,21 +502,16 @@ editingItemIndex = null;
 
 const sale = allSales.find(s => s.id === id);
 
-snap.forEach(d=>{
-if(d.id === id){
+if(!sale) return;
 
-const data = d.data();
+items = sale.items || [];
 
-/* завантажуємо всі позиції */
-items = data.items || [];
-
-/* очищаємо форму */
 weights = [];
 priceInput.value = "";
+
 renderWeights();
 renderItems();
 
-/* показуємо першу рибу для редагування */
 if(items.length){
 
 fishType.value = items[0].fish;
@@ -527,8 +522,4 @@ renderWeights();
 
 }
 
-}
-});
-
 };
-}
