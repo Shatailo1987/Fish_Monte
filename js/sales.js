@@ -332,6 +332,10 @@ await addDoc(salesRef, saleData);
 
 items=[];
 
+buyerSelect.value = "";
+newName.value = "";
+newPhone.value = "";
+
 renderItems();
 renderWeights();
 priceInput.value = "";
