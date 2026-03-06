@@ -96,16 +96,6 @@ snap.forEach(d => {
 
 const s = d.data();
 
-data.items.forEach(i=>{
-
-if(!fishStats[i.fish]){
-fishStats[i.fish] = 0;
-}
-
-fishStats[i.fish] += i.kg;
-
-});
-
 totalKg += s.totalKg || 0;
 totalMoney += s.totalSum || 0;
 count++;
