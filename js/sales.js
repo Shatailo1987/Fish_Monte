@@ -345,13 +345,14 @@ ${data.totalSum} грн
 </div>
 
 ${data.items.map(i => `
-<b>${i.fish}</b> — ${i.kg} кг — ${i.sum} грн
 
 <div style="margin-left:10px;border-top:1px dashed #ccc;padding-top:4px">
 
 <b>${i.fish}</b><br>
 
 Наважки: ${i.weights.join(" + ")} кг<br>
+
+Кількість наважок: ${i.weights.length}<br>
 
 Разом: ${i.kg} кг<br>
 
