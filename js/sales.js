@@ -73,7 +73,6 @@ const totalSum = document.getElementById("totalSum");
 const saveSaleBtn = document.getElementById("saveSale");
 const salesList = document.getElementById("salesList");
 
-
 function renderWeights(){
 
 weightsList.innerHTML =
@@ -100,7 +99,6 @@ weights.length ? weights.reduce((a,b)=>a+b,0) : 0;
 
 }
 
-
 addWeightBtn.addEventListener("click", () => {
 
 const w = Number(weightInput.value);
@@ -114,7 +112,6 @@ weightInput.value = "";
 renderWeights();
 
 });
-
 
 function renderItems(){
 
@@ -174,7 +171,6 @@ renderWeights();
 renderItems();
 
 });
-
 
 saveSaleBtn.addEventListener("click", async () => {
 
