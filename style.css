@@ -10,9 +10,9 @@ h2, h3, h4 {
 }
 
 #app, #authScreen {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 25px;
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 18px;
   background: white;
   border-radius: 12px;
   box-shadow: 0 10px 25px rgba(0,0,0,0.08);
