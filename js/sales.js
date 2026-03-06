@@ -135,6 +135,21 @@ items.reduce((a,b)=>a+b.sum,0);
 
 }
 
+window.selectItem = function(index){
+
+editingItemIndex = index;
+
+const item = items[index];
+
+fishType.value = item.fish;
+priceInput.value = item.price;
+
+weights = [...item.weights];
+
+renderWeights();
+
+}
+
 addFishBtn.addEventListener("click", () => {
 
 if(!weights.length) return;
