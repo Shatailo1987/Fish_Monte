@@ -301,7 +301,22 @@ renderSalesHistory();
 
 };
 
+let allSales = [];
+
 onSnapshot(salesRef,snap=>{
+
+allSales = [];
+
+snap.forEach(d=>{
+allSales.push({
+id:d.id,
+...d.data()
+});
+});
+
+renderSalesHistory();
+
+});
 
 salesList.innerHTML="";
 
