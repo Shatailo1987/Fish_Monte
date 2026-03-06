@@ -369,51 +369,6 @@ ${data.items.map(i => `
 
 }
 
-salesList.innerHTML="";
-
-let totalKg = 0;
-let totalMoney = 0;
-let count = 0;
-
-snap.forEach(d=>{
-
-const data = d.data();
-
-totalKg += data.totalKg || 0;
-totalMoney += data.totalSum || 0;
-count++;
-
-salesList.innerHTML += `
-<details style="border:1px solid #999;margin:5px;padding:5px;">
-
-<summary>
-${new Date(data.date).toLocaleDateString()} —
-${data.buyerName} (${data.buyerPhone}) —
-${data.totalKg} кг —
-${data.totalSum} грн
-</summary>
-
-<div style="margin:5px 0;">
-<button onclick="editSale('${d.id}')">✏️ Редагувати</button>
-<button onclick="deleteSale('${d.id}')">🗑 Видалити</button>
-</div>
-
-${data.items.map(i => `
-
-<div style="margin-left:10px;">
-${i.fish}:
-${i.weights.join(" + ")}
-= ${i.kg} кг
-(наважок: ${i.weights.length})
-</div>
-
-`).join("")}
-
-</details>
-`;
-
-});
-
 const kgEl = document.getElementById("statKg");
 const moneyEl = document.getElementById("statMoney");
 const salesEl = document.getElementById("statSales");
