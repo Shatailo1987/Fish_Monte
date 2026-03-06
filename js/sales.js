@@ -8,7 +8,18 @@ let editingItemIndex = null;
 
 const buyersSnap = await getDocs(buyersRef);
 buyersSnap.forEach(d => buyers.push(d.data()));
+const unique = [];
+const phones = new Set();
 
+buyers.forEach(b=>{
+if(!phones.has(b.phone)){
+phones.add(b.phone);
+unique.push(b);
+}
+});
+
+buyers = unique;
+  
 content.innerHTML = `
 <h2>Продаж</h2>
 
