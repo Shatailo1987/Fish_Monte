@@ -71,6 +71,9 @@ const newName = document.getElementById("newName");
 const newPhone = document.getElementById("newPhone");
 
 const fishType = document.getElementById("fishType");
+fishType.addEventListener("change",()=>{
+priceInput.value = fishPrices[fishType.value] || "";
+});
 const weightInput = document.getElementById("weightInput");
 const addWeightBtn = document.getElementById("addWeight");
 
