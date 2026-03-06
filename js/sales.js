@@ -170,6 +170,20 @@ sum:kg*price
 
 }else{
 
+if(editingItemIndex !== null){
+
+items[editingItemIndex] = {
+fish,
+weights:[...weights],
+kg,
+price,
+sum:kg*price
+};
+
+editingItemIndex = null;
+
+}else{
+
 items.push({
 fish,
 weights:[...weights],
