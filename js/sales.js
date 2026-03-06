@@ -353,12 +353,6 @@ filterFrom = dateFrom.value ? new Date(dateFrom.value) : null;
 filterTo = dateTo.value ? new Date(dateTo.value) : null;
 
 renderSalesHistory();
-  
-${data.buyerName}
-<span style="color:#888;cursor:pointer"
-onclick="navigator.clipboard.writeText('${data.buyerPhone}')">
-(${data.buyerPhone})
-</span>
 
 };
 
