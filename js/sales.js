@@ -322,6 +322,7 @@ await deleteDoc(doc(salesRef, id));
 window.editSale = async function(id){
 
 editingSaleId = id;
+editingItemIndex = null;
 
 const snap = await getDocs(salesRef);
 
