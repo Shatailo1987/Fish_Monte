@@ -74,6 +74,16 @@ const fishType = document.getElementById("fishType");
 fishType.addEventListener("change",()=>{
 priceInput.value = fishPrices[fishType.value] || "";
 });
+
+const fishColors = {
+"Короп":"#d1f2eb",
+"Амур":"#d6eaf8",
+"Товстолоб":"#fdebd0",
+"Карась":"#f9e79f",
+"Щука":"#fadbd8",
+"Окунь":"#e8daef"
+};
+  
 const weightInput = document.getElementById("weightInput");
 const addWeightBtn = document.getElementById("addWeight");
 
