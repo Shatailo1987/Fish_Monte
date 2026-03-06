@@ -289,6 +289,18 @@ fishType.selectedIndex = 0;
 
 });
 
+let filterFrom = null;
+let filterTo = null;
+
+filterBtn.onclick = () => {
+
+filterFrom = dateFrom.value ? new Date(dateFrom.value) : null;
+filterTo = dateTo.value ? new Date(dateTo.value) : null;
+
+renderSalesHistory();
+
+};
+
 onSnapshot(salesRef,snap=>{
 
 salesList.innerHTML="";
