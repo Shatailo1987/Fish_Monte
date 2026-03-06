@@ -373,7 +373,7 @@ margin:10px 0;
 padding:10px;
 border:1px solid #ddd;
 border-radius:8px;
-background:#f9f9f9;
+background:${fishColors[i.fish] || "#f9f9f9"};
 ">
 
 <div style="
