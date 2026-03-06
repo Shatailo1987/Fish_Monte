@@ -506,7 +506,7 @@ window.editSale = async function(id){
 editingSaleId = id;
 editingItemIndex = null;
 
-const snap = await getDocs(salesRef);
+const sale = allSales.find(s => s.id === id);
 
 snap.forEach(d=>{
 if(d.id === id){
