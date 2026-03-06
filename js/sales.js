@@ -274,13 +274,26 @@ alert("Вкажіть імʼя та телефон");
 return;
 }
 
+  /* перевіряємо чи покупець вже є */
+
+const existingBuyer = buyers.find(b => b.phone === newPhoneVal);
+
+if(existingBuyer){
+
+    /* використовуємо існуючого */
+buyerName = existingBuyer.name;
+buyerPhone = existingBuyer.phone;
+
+}else{
+
+    /* створюємо нового */
 await addDoc(buyersRef,{
 name:newNameVal,
 phone:newPhoneVal
 });
 
-buyerName=newNameVal;
-buyerPhone=newPhoneVal;
+buyerName = newNameVal;
+buyerPhone = newPhoneVal;
 
 }
 
