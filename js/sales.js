@@ -93,20 +93,29 @@ function renderWeights(){
 
 weightsList.innerHTML =
 weights.map((w,i)=>`
-<div>
-${fishType.value}
+<div style="display:flex;align-items:center;margin:4px 0">
+
+<span style="width:80px">${fishType.value}</span>
 
 <input 
 type="number"
 value="${w}"
-style="width:80px"
+style="width:80px;margin-right:6px"
 onchange="updateWeight(${i}, this.value)"
 > кг
+
+<button onclick="removeWeight(${i})">❌</button>
+
 </div>
 `).join("");
 
 window.updateWeight = function(index,value){
 weights[index] = Number(value);
+renderWeights();
+}
+
+window.removeWeight = function(index){
+weights.splice(index,1);
 renderWeights();
 }
 
