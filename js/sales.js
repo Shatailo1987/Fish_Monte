@@ -157,6 +157,18 @@ renderWeights();
 
 }
 
+window.deleteItem = function(index){
+
+const fish = items[index].fish;
+
+if(!confirm("Видалити " + fish + " з продажу?")) return;
+
+items.splice(index,1);
+
+renderItems();
+
+}
+
 addFishBtn.addEventListener("click", () => {
 
 if(!weights.length) return;
