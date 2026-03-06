@@ -58,6 +58,16 @@ line-height:1.4;
 <div class="statValue" id="statSales">0</div>
 </div>
 
+<div class="card stat">
+<div class="statTitle">ТОП покупець сьогодні</div>
+<div class="statValue" id="topBuyer">—</div>
+</div>
+
+<div class="card stat">
+<div class="statTitle">ТОП риба сьогодні</div>
+<div class="statValue" id="topFish">—</div>
+</div>
+
 </div>
 
 <div class="tabs">
