@@ -34,6 +34,7 @@ app.innerHTML = `
 <div class="card stat">
 <div class="statTitle">Кг продано</div>
 <div class="statValue" id="statKg">0</div>
+<div id="statFishBreakdown" style="margin-top:6px;font-size:12px;color:#666"></div>
 </div>
 
 <div class="card stat">
