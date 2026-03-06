@@ -120,6 +120,16 @@ if(kgEl) kgEl.innerText = totalKg;
 if(moneyEl) moneyEl.innerText = totalMoney + " грн";
 if(salesEl) salesEl.innerText = count;
 
+const fishDiv = document.getElementById("statFishBreakdown");
+
+if(fishDiv){
+
+fishDiv.innerHTML = Object.entries(fishStats)
+.map(([fish,kg]) => fish + " — " + kg + " кг")
+.join("<br>");
+
+}
+
 });
 
 
