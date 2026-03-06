@@ -64,6 +64,9 @@ ${buyers.map(b => `<option value="${b.phone}">${b.name} (${b.phone})</option>`).
 </div>
 
 <div id="salesList"></div>
+<hr>
+<h3>Рейтинг покупців</h3>
+<div id="buyersRating"></div>
 `;
 
 const buyerSelect = document.getElementById("buyerSelect");
