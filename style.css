@@ -112,3 +112,23 @@ font-weight:600;
 margin-top:5px;
 color:#0f6bff;
 }
+
+@media (max-width:600px){
+
+#app, #authScreen{
+margin:0;
+border-radius:0;
+box-shadow:none;
+min-height:100vh;
+}
+
+.dashboard{
+grid-template-columns:1fr 1fr;
+}
+
+button{
+font-size:16px;
+padding:14px;
+}
+
+}
