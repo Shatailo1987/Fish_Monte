@@ -319,6 +319,17 @@ await addDoc(salesRef, saleData);
 
 }
 
+if(editingSaleId !== null){
+
+await updateDoc(doc(salesRef, editingSaleId), saleData);
+editingSaleId = null;
+
+}else{
+
+await addDoc(salesRef, saleData);
+
+}
+
 items=[];
 
 renderItems();
