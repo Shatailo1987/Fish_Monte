@@ -85,6 +85,9 @@ const totalSum = document.getElementById("totalSum");
 
 const saveSaleBtn = document.getElementById("saveSale");
 const salesList = document.getElementById("salesList");
+const dateFrom = document.getElementById("dateFrom");
+const dateTo = document.getElementById("dateTo");
+const filterBtn = document.getElementById("filterSales");
 
 function renderWeights(){
 
