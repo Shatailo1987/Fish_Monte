@@ -318,6 +318,52 @@ renderSalesHistory();
 
 });
 
+function renderSalesHistory(){
+
+salesList.innerHTML = "";
+
+allSales.forEach(data=>{
+
+const saleDate = new Date(data.date);
+
+if(filterFrom && saleDate < filterFrom) return;
+if(filterTo && saleDate > filterTo) return;
+
+salesList.innerHTML += `
+<details style="border:1px solid #999;margin:5px;padding:5px;">
+
+<summary>
+${saleDate.toLocaleDateString()} —
+${data.buyerName} (${data.buyerPhone}) —
+${data.totalKg} кг —
+${data.totalSum} грн
+</summary>
+
+${data.items.map(i => `
+
+<div style="margin-left:10px;border-top:1px dashed #ccc;padding-top:4px">
+
+<b>${i.fish}</b><br>
+
+Наважки: ${i.weights.join(" + ")} кг<br>
+
+Разом: ${i.kg} кг<br>
+
+Ціна: ${i.price} грн/кг<br>
+
+Сума: ${i.sum} грн
+
+</div>
+
+`).join("")}
+
+</details>
+`;
+
+});
+
+}
+
 salesList.innerHTML="";
 
 let totalKg = 0;
