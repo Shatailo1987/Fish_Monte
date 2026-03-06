@@ -236,6 +236,12 @@ if(!weights.length) return;
 
 const kg = weights.reduce((a,b)=>a+b,0);
 const price = Number(priceInput.value);
+
+if(!price){
+alert("Вкажіть ціну за кг");
+return;
+}
+  
 const fish = fishType.value;
 
 if(editingItemIndex !== null){
