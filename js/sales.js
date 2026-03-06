@@ -297,6 +297,8 @@ buyerPhone = newPhoneVal;
 
 }
 
+}
+
 const saleData = {
 buyerName,
 buyerPhone,
