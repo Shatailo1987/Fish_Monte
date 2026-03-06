@@ -107,6 +107,14 @@ snap.forEach(d => {
 
 const s = d.data();
 
+  /* покупці */
+
+if(!buyerStats[s.buyerName]){
+buyerStats[s.buyerName] = 0;
+}
+
+buyerStats[s.buyerName] += s.totalKg;
+
 totalKg += s.totalKg || 0;
 totalMoney += s.totalSum || 0;
 count++;
