@@ -4,6 +4,7 @@ let buyers = [];
 let weights = [];
 let items = [];
 let editingSaleId = null;
+let editingItemIndex = null;
 
 const buyersSnap = await getDocs(buyersRef);
 buyersSnap.forEach(d => buyers.push(d.data()));
